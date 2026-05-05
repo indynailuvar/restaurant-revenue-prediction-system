@@ -1,5 +1,7 @@
 venv/
 .venv/
+__pycache__/
+*.pyc
 
 mlflow.db
 mlflow.db-shm
@@ -9,4 +11,7 @@ mlruns/
 
 *.pkl
 *.joblib
-__pycache__/
+
+.env
+backend/.env
+frontend/.env
