@@ -1,0 +1,14 @@
+=== MODEL ARTIFACT DETAIL ===
+total 10K
+drwxr-xr-x 1 Indy 197121    0 May  7 10:55 ./
+drwxr-xr-x 1 Indy 197121    0 May  7 10:55 ../
+-rw-r--r-- 1 Indy 197121  618 May  7 10:55 best_model.pkl
+-rw-r--r-- 1 Indy 197121  486 May  7 10:55 encoders.pkl
+-rw-r--r-- 1 Indy 197121  304 May  7 10:55 feature_names.pkl
+-rw-r--r-- 1 Indy 197121 1.2K May  7 10:55 scaler.pkl
+
+=== FILE TYPE CHECK ===
+models/trained/best_model.pkl: data
+models/trained/encoders.pkl: data
+models/trained/feature_names.pkl: data
+models/trained/scaler.pkl: data

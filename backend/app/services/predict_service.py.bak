@@ -229,6 +229,7 @@ class PredictionService:
 
 from typing import Any
 
+from backend.app.services.predict_service import PredictionService
 
 
 _prediction_service = PredictionService()
