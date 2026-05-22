@@ -1,0 +1,21 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --peach: #FFB347;
+  --cream: #FFF8F0;
+  --terracotta: #E07A5F;
+  --sage: #81B29A;
+  --white: #FFFFFF;
+  --dark: #3D3D3D;
+  --shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+body {
+  background-color: var(--cream);
+  font-family: 'Segoe UI', sans-serif;
+  color: var(--dark);
+}
