@@ -1,0 +1,23 @@
+artifact_path: file:///C:/Users/LENOVO/restaurant-revenue-prediction-system/mlruns/2/models/m-5db04f4341d447e596b923fe6d028488/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.10.11
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.7.2
+    skops_trusted_types: null
+mlflow_version: 3.11.1
+model_id: m-5db04f4341d447e596b923fe6d028488
+model_size_bytes: 2464005
+model_uuid: m-5db04f4341d447e596b923fe6d028488
+prompts: null
+run_id: f654524604154b68ab87ea868cca73bd
+utc_time_created: '2026-05-04 15:32:15.695429'
