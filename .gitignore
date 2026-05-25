@@ -1,2 +1,3 @@
 # Tambahkan ke .gitignore dulu biar file pkl besar tidak ikut
 Add-Content .gitignore "`nmlruns/**/artifacts/*/model.pkl"
+Add-Content .gitignore "`nmlruns/**/artifacts/*/model.pkl"

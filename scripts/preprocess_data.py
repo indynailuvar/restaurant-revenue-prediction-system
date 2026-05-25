@@ -10,15 +10,15 @@ def load_and_preprocess(
     input_path='data/raw/restaurant_data.csv',
     output_path='data/processed/dataset_modeling.csv'
 ):
-    # ── 1. Load CSV ──
+    # Load CSV 
     df = pd.read_csv(input_path, sep=';')
     print(f"Dataset loaded: {df.shape[0]} baris × {df.shape[1]} kolom")
 
-    # ── 2. Cek tipe data awal ──
+    # Cek tipe data awal
     print(f"\nTipe data kolom:")
     print(df.dtypes)
 
-    # ── 3. Fix kolom Avg Review Length (object → numeric) ──
+    # Fix kolom Avg Review Length (object → numeric) 
     if 'Avg Review Length' in df.columns:
         df['Avg Review Length'] = df['Avg Review Length'].astype(str)
         df['Avg Review Length'] = df['Avg Review Length'].str.replace(',', '.', regex=False)
@@ -39,7 +39,7 @@ def load_and_preprocess(
         print(f"  Avg Review Length setelah fix: {df['Avg Review Length'].dtype}")
         print(f"  Sample nilai: {df['Avg Review Length'].head(3).tolist()}")
 
-    # ── 4. Cek Revenue ──
+    # Cek Revenue 
     print(f"\nStatistik Revenue:")
     print(f"  Min    : {df['Revenue'].min():,.2f}")
     print(f"  Max    : {df['Revenue'].max():,.2f}")
@@ -47,18 +47,18 @@ def load_and_preprocess(
     print(f"  Median : {df['Revenue'].median():,.2f}")
     print(f"  Null   : {df['Revenue'].isna().sum()}")
 
-    # ── 5. Hapus kolom identitas ──
+    # Hapus kolom identitas 
     drop_cols = ['Name']
     df = df.drop(columns=[c for c in drop_cols if c in df.columns])
 
-    # ── 6. Drop baris null di kolom penting ──
+    # Drop baris null di kolom penting 
     kolom_wajib = ['Revenue', 'Rating', 'Seating Capacity',
                    'Average Meal Price', 'Marketing Budget']
     before = len(df)
     df = df.dropna(subset=kolom_wajib)
     print(f"\nBaris setelah drop null: {len(df)} (dihapus {before - len(df)})")
 
-    # ── 7. Encode kolom kategorikal ──
+    # Encode kolom kategorikal 
     encoders = {}
     cat_cols = ['Location', 'Cuisine', 'Parking Availability']
     for col in cat_cols:
@@ -68,14 +68,14 @@ def load_and_preprocess(
             encoders[col] = le
             print(f"  Encoded '{col}': {list(le.classes_)}")
 
-    # ── 8. Pisah fitur dan target ──
+    # Pisah fitur dan target 
     X = df.drop(columns=['Revenue'])
     y = df['Revenue']
     feature_names = list(X.columns)
     print(f"\nJumlah fitur : {len(feature_names)}")
     print(f"Fitur        : {feature_names}")
 
-    # ── Pastikan tidak ada NaN di X sebelum scaling ──
+    # Pastikan tidak ada NaN di X sebelum scaling 
     # Isi NaN yang tersisa dengan median kolom masing-masing
     for col in X.columns:
         if X[col].isna().any():
@@ -86,18 +86,18 @@ def load_and_preprocess(
 
     print(f"\nNaN di X setelah impute: {X.isna().sum().sum()}")
 
-    # ── 9. Train-test split ──
+    # Train-test split 
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42
     )
     print(f"\nTrain: {X_train.shape} | Test: {X_test.shape}")
 
-    # ── 10. Scaling ──
+    # Scaling
     scaler = StandardScaler()
     X_train_scaled = scaler.fit_transform(X_train)
     X_test_scaled  = scaler.transform(X_test)
 
-    # ── 11. Simpan dataset processed ──
+    # Simpan dataset processed 
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     df_processed = pd.concat([
         pd.DataFrame(X, columns=feature_names).reset_index(drop=True),
@@ -106,7 +106,7 @@ def load_and_preprocess(
     df_processed.to_csv(output_path, index=False)
     print(f"\n Dataset tersimpan: {output_path}")
 
-    # ── 12. Simpan scaler, encoder, feature_names ──
+    # Simpan scaler, encoder, feature_names 
     os.makedirs('models/trained', exist_ok=True)
     with open('models/trained/scaler.pkl', 'wb') as f:
         pickle.dump(scaler, f)
