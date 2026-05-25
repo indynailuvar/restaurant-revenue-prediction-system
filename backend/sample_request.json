@@ -1,0 +1,17 @@
+{
+  "Location": "Downtown",
+  "Cuisine": "Japanese",
+  "Rating": 4.5,
+  "Seating_Capacity": 80,
+  "Average_Meal_Price": 150000,
+  "Marketing_Budget": 5000000,
+  "Social_Media_Followers": 12000,
+  "Chef_Experience_Years": 8,
+  "Number_of_Reviews": 350,
+  "Avg_Review_Length": 120,
+  "Ambience_Score": 4.3,
+  "Service_Quality_Score": 4.4,
+  "Weekend_Reservations": 60,
+  "Weekday_Reservations": 35,
+  "Parking_Availability": "Yes"
+}
