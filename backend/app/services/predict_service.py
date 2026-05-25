@@ -1,18 +1,8 @@
-from pathlib import Path
 from typing import Any
-import pickle
 
-import joblib
 import pandas as pd
 
-
-PROJECT_ROOT = Path(__file__).resolve().parents[3]
-ARTIFACT_DIR = PROJECT_ROOT / "models" / "trained"
-
-MODEL_PATH = ARTIFACT_DIR / "best_model.pkl"
-SCALER_PATH = ARTIFACT_DIR / "scaler.pkl"
-FEATURE_NAMES_PATH = ARTIFACT_DIR / "feature_names.pkl"
-ENCODERS_PATH = ARTIFACT_DIR / "encoders.pkl"
+from app.services.model_loader import load_model_artifacts
 
 
 class PredictionService:
@@ -21,47 +11,20 @@ class PredictionService:
         self.scaler = None
         self.feature_names = None
         self.encoders = None
+        self.model_name = None
+        self.model_version = None
+        self.model_alias = None
 
-    def _load_file(self, path: Path):
-        try:
-            return joblib.load(path)
-        except Exception:
-            with open(path, "rb") as file:
-                return pickle.load(file)
+    def load_artifacts(self) -> None:
+        artifacts = load_model_artifacts()
 
-    def load_artifacts(self):
-        required_files = [
-            MODEL_PATH,
-            SCALER_PATH,
-            FEATURE_NAMES_PATH,
-            ENCODERS_PATH,
-        ]
-
-        missing_files = [
-            str(path) for path in required_files if not path.exists()
-        ]
-
-        if missing_files:
-            raise FileNotFoundError(
-                "Artifact model belum lengkap: " + ", ".join(missing_files)
-            )
-
-        self.model = self._load_file(MODEL_PATH)
-        self.scaler = self._load_file(SCALER_PATH)
-        self.feature_names = self._load_file(FEATURE_NAMES_PATH)
-        self.encoders = self._load_file(ENCODERS_PATH)
-
-        return {
-            "model_loaded": self.model is not None,
-            "scaler_loaded": self.scaler is not None,
-            "feature_names_loaded": self.feature_names is not None,
-            "encoders_loaded": self.encoders is not None,
-            "model_type": str(type(self.model)),
-            "scaler_type": str(type(self.scaler)),
-            "feature_names_type": str(type(self.feature_names)),
-            "encoders_type": str(type(self.encoders)),
-            "total_features": len(self.feature_names),
-        }
+        self.model = artifacts["model"]
+        self.scaler = artifacts["scaler"]
+        self.feature_names = artifacts["feature_names"]
+        self.encoders = artifacts["encoders"]
+        self.model_name = artifacts["model_name"]
+        self.model_version = artifacts["model_version"]
+        self.model_alias = artifacts["model_alias"]
 
     def predict(self, input_data: dict[str, Any]) -> dict[str, Any]:
         if self.model is None:
@@ -71,45 +34,26 @@ class PredictionService:
         processed_df = self._preprocess(input_df)
 
         prediction = self.model.predict(processed_df)
-        prediction_value = float(prediction[0])
+        predicted_revenue = float(prediction[0])
 
-        return self._build_response(prediction_value, input_data)
+        return self._build_response(predicted_revenue, input_data)
 
     def _preprocess(self, input_df: pd.DataFrame) -> pd.DataFrame:
         df = input_df.copy()
 
-        df = self._normalize_boolean_values(df)
+        df = self._clean_string_values(df)
         df = self._apply_encoders(df)
-        df = pd.get_dummies(df)
-
-        for feature in self.feature_names:
-            if feature not in df.columns:
-                df[feature] = 0
-
-        df = df[self.feature_names]
-
-        df = df.apply(pd.to_numeric, errors="coerce").fillna(0)
-
-        if self.scaler is not None and hasattr(self.scaler, "transform"):
-            scaled_values = self.scaler.transform(df)
-            df = pd.DataFrame(scaled_values, columns=self.feature_names)
+        df = self._one_hot_encode_remaining_objects(df)
+        df = self._align_features(df)
+        df = self._convert_to_numeric(df)
+        df = self._apply_scaler(df)
 
         return df
 
-    def _normalize_boolean_values(self, df: pd.DataFrame) -> pd.DataFrame:
-        true_values = {"ya", "yes", "true", "1", "aktif", "ada"}
-        false_values = {"tidak", "no", "false", "0", "nonaktif", "tidak ada"}
-
-        for col in df.columns:
-            if df[col].dtype == "object":
-                value = str(df.loc[0, col]).strip().lower()
-
-                if value in true_values:
-                    df.loc[0, col] = 1
-                elif value in false_values:
-                    df.loc[0, col] = 0
-                else:
-                    df.loc[0, col] = str(df.loc[0, col]).strip()
+    def _clean_string_values(self, df: pd.DataFrame) -> pd.DataFrame:
+        for column in df.columns:
+            if df[column].dtype == "object":
+                df[column] = df[column].astype(str).str.strip()
 
         return df
 
@@ -117,164 +61,139 @@ class PredictionService:
         if not isinstance(self.encoders, dict):
             return df
 
-        for col, encoder in self.encoders.items():
-            if col not in df.columns:
+        for column, encoder in self.encoders.items():
+            if column not in df.columns:
                 continue
 
             try:
-                value = df[col].iloc[0]
+                value = df[column].iloc[0]
 
                 if hasattr(encoder, "classes_"):
-                    classes = list(encoder.classes_)
-
-                    if value not in classes:
-                        value_as_string = str(value)
-
-                        if value_as_string in classes:
-                            value = value_as_string
-                        else:
-                            value = classes[0]
-
-                    df[col] = encoder.transform([value])[0]
+                    safe_value = self._get_safe_label_encoder_value(value, encoder)
+                    df[column] = encoder.transform([safe_value])[0]
 
                 elif isinstance(encoder, dict):
-                    df[col] = encoder.get(value, 0)
+                    df[column] = encoder.get(value, encoder.get(str(value), 0))
 
             except Exception:
-                df[col] = 0
+                df[column] = 0
 
         return df
 
-    def _build_response(self, prediction_value: float, input_data: dict[str, Any]) -> dict[str, Any]:
+    def _get_safe_label_encoder_value(self, value: Any, encoder: Any) -> Any:
+        classes = list(encoder.classes_)
+
+        if value in classes:
+            return value
+
+        value_as_string = str(value)
+
+        if value_as_string in classes:
+            return value_as_string
+
+        return classes[0]
+
+    def _one_hot_encode_remaining_objects(self, df: pd.DataFrame) -> pd.DataFrame:
+        object_columns = df.select_dtypes(include=["object"]).columns.tolist()
+
+        if object_columns:
+            df = pd.get_dummies(df, columns=object_columns)
+
+        return df
+
+    def _align_features(self, df: pd.DataFrame) -> pd.DataFrame:
+        if self.feature_names is None:
+            raise ValueError("feature_names belum dimuat dari artifact model.")
+
+        for feature in self.feature_names:
+            if feature not in df.columns:
+                df[feature] = 0
+
+        df = df[self.feature_names]
+
+        return df
+
+    def _convert_to_numeric(self, df: pd.DataFrame) -> pd.DataFrame:
+        return df.apply(pd.to_numeric, errors="coerce").fillna(0)
+
+    def _apply_scaler(self, df: pd.DataFrame) -> pd.DataFrame:
+        if self.scaler is None:
+            return df
+
+        if hasattr(self.scaler, "transform"):
+            scaled_values = self.scaler.transform(df)
+            return pd.DataFrame(scaled_values, columns=self.feature_names)
+
+        return df
+
+    def _build_response(
+        self,
+        predicted_revenue: float,
+        input_data: dict[str, Any],
+    ) -> dict[str, Any]:
         return {
-            "prediction_value": round(prediction_value, 4),
-            "prediction_label": self._interpret_prediction(prediction_value),
+            "predicted_revenue": round(predicted_revenue, 2),
+            "model_status": "loaded",
+            "model_name": self.model_name or "restaurant_gb_revenue1",
+            "model_version": self.model_version or "1",
+            "model_alias": self.model_alias or "champion",
+            "currency_note": "Prediksi mengikuti skala Revenue pada dataset.",
             "supporting_factors": self._get_supporting_factors(input_data),
-            "improvement_factors": self._get_improvement_factors(input_data),
-            "recommendation": self._get_recommendation(prediction_value),
+            "recommendation": (
+                "Hasil prediksi dapat digunakan sebagai estimasi pendapatan restoran "
+                "berdasarkan fitur operasional, pemasaran, ulasan, reservasi, "
+                "dan karakteristik bisnis yang diberikan."
+            ),
         }
-
-    def _interpret_prediction(self, value: float) -> str:
-        """
-        Interpretasi ini aman untuk target google_rating skala 1-5.
-        Jika target model ternyata revenue atau success_score, bagian ini perlu disesuaikan lagi.
-        """
-        if 1 <= value <= 5:
-            if value >= 4.5:
-                return "Potensi Sangat Tinggi"
-            if value >= 4.0:
-                return "Potensi Tinggi"
-            if value >= 3.5:
-                return "Potensi Sedang"
-            return "Potensi Rendah"
-
-        return "Prediksi Berhasil Diproses"
 
     def _get_supporting_factors(self, input_data: dict[str, Any]) -> list[str]:
         factors = []
 
-        if input_data.get("delivery") in [1, "1", True, "Ya", "ya"]:
-            factors.append("Layanan delivery tersedia")
+        rating = float(input_data.get("Rating", 0) or 0)
+        seating_capacity = int(input_data.get("Seating_Capacity", 0) or 0)
+        marketing_budget = float(input_data.get("Marketing_Budget", 0) or 0)
+        social_media_followers = int(input_data.get("Social_Media_Followers", 0) or 0)
+        weekend_reservations = int(input_data.get("Weekend_Reservations", 0) or 0)
+        weekday_reservations = int(input_data.get("Weekday_Reservations", 0) or 0)
+        number_of_reviews = int(input_data.get("Number_of_Reviews", 0) or 0)
 
-        if input_data.get("takeaway") in [1, "1", True, "Ya", "ya"]:
-            factors.append("Layanan takeaway tersedia")
+        total_reservations = weekend_reservations + weekday_reservations
 
-        if input_data.get("bayar_qris") in [1, "1", True, "Ya", "ya"]:
-            factors.append("Pembayaran QRIS tersedia")
+        if rating >= 4.0:
+            factors.append("Rating restoran relatif tinggi.")
 
-        if input_data.get("ada_jam_buka") in [1, "1", True, "Ya", "ya"]:
-            factors.append("Informasi jam buka tersedia")
+        if seating_capacity >= 75:
+            factors.append("Kapasitas tempat duduk cukup besar.")
 
-        return factors or ["Beberapa faktor usaha sudah mendukung prediksi"]
+        if marketing_budget > 0:
+            factors.append("Restoran memiliki alokasi anggaran pemasaran.")
 
-    def _get_improvement_factors(self, input_data: dict[str, Any]) -> list[str]:
-        factors = []
+        if social_media_followers >= 10000:
+            factors.append("Jumlah pengikut media sosial relatif besar.")
 
-        if input_data.get("ada_website") in [0, "0", False, "Tidak", "tidak", None]:
-            factors.append("Website usaha belum tersedia")
+        if total_reservations >= 80:
+            factors.append("Jumlah reservasi menunjukkan permintaan pelanggan yang baik.")
 
-        if input_data.get("ada_instagram") in [0, "0", False, "Tidak", "tidak", None]:
-            factors.append("Instagram usaha belum tersedia")
+        if number_of_reviews >= 300:
+            factors.append("Jumlah ulasan pelanggan relatif banyak.")
 
-        if input_data.get("bayar_qris") in [0, "0", False, "Tidak", "tidak", None]:
-            factors.append("Pembayaran QRIS belum tersedia")
-
-        return factors or ["Pertahankan faktor pendukung yang sudah tersedia"]
-
-    def _get_recommendation(self, prediction_value: float) -> str:
-        if 1 <= prediction_value <= 5:
-            if prediction_value >= 4.0:
-                return (
-                    "UMKM memiliki potensi yang baik. Pertahankan kualitas layanan "
-                    "dan tingkatkan konsistensi promosi digital."
-                )
-
-            if prediction_value >= 3.5:
-                return (
-                    "UMKM memiliki potensi cukup. Tingkatkan kelengkapan informasi digital, "
-                    "layanan online, dan metode pembayaran modern."
-                )
-
-            return (
-                "UMKM perlu memperkuat kehadiran digital, memperjelas informasi usaha, "
-                "dan meningkatkan layanan yang memudahkan pelanggan."
+        if not factors:
+            factors.append(
+                "Prediksi dihitung berdasarkan kombinasi seluruh fitur input yang diberikan."
             )
 
-        return (
-            "Prediksi berhasil diproses. Interpretasi akhir perlu disesuaikan "
-            "dengan target model sebenarnya."
-        ) 
+        return factors
 
 
-
-from typing import Any
-
+prediction_service = PredictionService()
 
 
-_prediction_service = PredictionService()
-
-
-def _extract_features(payload: Any) -> dict:
-    """
-    Mengambil data fitur dari berbagai kemungkinan bentuk input:
-    - dict biasa
-    - dict dengan key 'features'
-    - Pydantic model dari FastAPI
-    """
-
-    if isinstance(payload, dict):
-        return payload.get("features", payload)
-
+def predict_revenue(payload: Any) -> dict[str, Any]:
     if hasattr(payload, "model_dump"):
-        data = payload.model_dump()
-        return data.get("features", data)
+        features = payload.model_dump()
+    elif isinstance(payload, dict):
+        features = payload
+    else:
+        raise ValueError("Format input tidak valid untuk prediksi Revenue.")
 
-    if hasattr(payload, "dict"):
-        data = payload.dict()
-        return data.get("features", data)
-
-    if hasattr(payload, "__dict__"):
-        data = payload.__dict__
-        return data.get("features", data)
-
-    raise ValueError("Format input tidak dikenali oleh predict_revenue.")
-
-
-def predict_revenue(payload: Any) -> dict:
-    """
-    Adapter agar route lama tetap bisa berjalan.
-
-    Walaupun nama fungsinya masih predict_revenue, isi prediksinya sekarang
-    diarahkan ke PredictionService yang memuat model hasil training dari
-    models/trained/.
-    """
-
-    features = _extract_features(payload)
-    result = _prediction_service.predict(features)
-
-    return {
-        **result,
-        "predicted_revenue": result.get("prediction_value"),
-        "estimated_reputation_score": result.get("prediction_value"),
-        "predicted_success_level": result.get("prediction_label"),
-    }
+    return prediction_service.predict(features)
