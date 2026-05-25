@@ -174,9 +174,9 @@ function PredictionPage() {
             position: 'relative', zIndex: 1
           }}>
             {[
-              { label: 'Metode', val: 'Supervised Learning' },
-              { label: 'Status', val: '✅ Berhasil' },
-              { label: 'Akurasi', val: '~84%' },
+              { label: 'Metode', val: 'Supervised Learning Berbasis Regresi' },
+              { label: 'Model', val: 'Gradient Boosting' },
+              { label: 'Akurasi', val: '99.96%' },
             ].map(s => (
               <div key={s.label} style={{ textAlign: 'center' }}>
                 <div style={{

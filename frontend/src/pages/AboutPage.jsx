@@ -17,9 +17,9 @@ function AboutPage() {
   ]
 
   const models = [
-    { icon: '🌲', name: 'Random Forest', desc: 'Model ensemble berbasis decision tree yang robust untuk prediksi revenue restoran.' },
-    { icon: '⚡', name: 'Gradient Boosting', desc: 'Model boosting sekuensial dengan performa tinggi pada dataset revenue restoran.' },
-    { icon: '📈', name: 'Linear Regression', desc: 'Model baseline regresi untuk memprediksi nilai kontinu pendapatan restoran.' },
+    { icon: '⚡', name: 'Gradient Boosting', desc: 'Model terbaik — R² = 0.9996, MAE = 3810.59. Champion model di MLflow Registry.' },
+    { icon: '🌲', name: 'Random Forest', desc: 'R² = 0.9982, MAE = 12.98.' },
+    { icon: '📈', name: 'Ridge Regression', desc: 'R² = 0.8540. Model baseline pembanding.' },
   ]
 
   const stack = [

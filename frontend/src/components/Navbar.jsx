@@ -12,11 +12,12 @@ function Navbar() {
   }, [])
 
   const navItems = [
-    { path: '/', label: 'Beranda' },
-    { path: '/input', label: 'Prediksi' },
-    { path: '/prediction', label: 'Hasil' },
-    { path: '/about', label: 'Tentang' },
-  ]
+  { path: '/', label: 'Beranda' },
+  { path: '/input', label: 'Prediksi' },
+  { path: '/prediction', label: 'Hasil' },
+  { path: '/insight', label: 'Insight' },
+  { path: '/about', label: 'Tentang' },
+]
 
   return (
     <nav style={{

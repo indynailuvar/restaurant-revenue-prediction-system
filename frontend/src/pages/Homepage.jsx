@@ -176,7 +176,7 @@ function HomePage() {
           }}>
             {[
               { num: 15, suffix: '', label: 'Variabel Input' },
-              { num: 84, suffix: '%', label: 'Akurasi Model' },
+              { num: 99, suffix: '%', label: 'Akurasi Model' },
               { num: 3, suffix: '', label: 'Model Tersedia' },
             ].map((stat) => (
               <div key={stat.label}>
