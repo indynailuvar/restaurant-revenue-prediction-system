@@ -1,0 +1,113 @@
+{
+  "project": "restaurant revenue prediction",
+  "problem_type": "regression",
+  "target": {
+    "name": "Revenue",
+    "currency": "USD",
+    "min": 184708.52,
+    "max": 1531867.55,
+    "mean": 656070.5633508605
+  },
+  "currency": "USD",
+  "categorical_columns": [
+    "Location",
+    "Cuisine",
+    "Parking_Availability"
+  ],
+  "numeric_columns": [
+    "Rating",
+    "Seating_Capacity",
+    "Average_Meal_Price",
+    "Marketing_Budget",
+    "Social_Media_Followers",
+    "Chef_Experience_Years",
+    "Number_of_Reviews",
+    "Avg_Review_Length",
+    "Ambience_Score",
+    "Service_Quality_Score",
+    "Weekend_Reservations",
+    "Weekday_Reservations"
+  ],
+  "categorical_values": {
+    "Location": [
+      "Downtown",
+      "Rural",
+      "Suburban"
+    ],
+    "Cuisine": [
+      "American",
+      "French",
+      "Indian",
+      "Italian",
+      "Japanese",
+      "Mexican"
+    ],
+    "Parking_Availability": [
+      "No",
+      "Yes"
+    ]
+  },
+  "numeric_ranges": {
+    "Rating": {
+      "min": 3.0,
+      "max": 5.0,
+      "mean": 4.008257648183556
+    },
+    "Seating_Capacity": {
+      "min": 30.0,
+      "max": 90.0,
+      "mean": 60.21283460803059
+    },
+    "Average_Meal_Price": {
+      "min": 25.0,
+      "max": 76.0,
+      "mean": 47.896658699808796
+    },
+    "Marketing_Budget": {
+      "min": 604.0,
+      "max": 9978.0,
+      "mean": 3218.254899617591
+    },
+    "Social_Media_Followers": {
+      "min": 5277.0,
+      "max": 103777.0,
+      "mean": 36190.621773422565
+    },
+    "Chef_Experience_Years": {
+      "min": 1.0,
+      "max": 19.0,
+      "mean": 10.051983747609942
+    },
+    "Number_of_Reviews": {
+      "min": 50.0,
+      "max": 999.0,
+      "mean": 523.010396749522
+    },
+    "Avg_Review_Length": {
+      "min": 1.00119317750376,
+      "max": 999.760076852773,
+      "mean": 33.382544964725966
+    },
+    "Ambience_Score": {
+      "min": 1.0,
+      "max": 10.0,
+      "mean": 5.521283460803059
+    },
+    "Service_Quality_Score": {
+      "min": 1.0,
+      "max": 10.0,
+      "mean": 5.508771510516253
+    },
+    "Weekend_Reservations": {
+      "min": 0.0,
+      "max": 88.0,
+      "mean": 29.49175430210325
+    },
+    "Weekday_Reservations": {
+      "min": 0.0,
+      "max": 88.0,
+      "mean": 29.235301147227535
+    }
+  },
+  "prediction_warning_note": "Jika input berada di luar rentang data training, prediksi tetap dihitung tetapi hasilnya perlu ditafsirkan dengan hati-hati."
+}
