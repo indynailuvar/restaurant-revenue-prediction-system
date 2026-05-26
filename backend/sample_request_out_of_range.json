@@ -1,0 +1,17 @@
+{
+  "Location": "Planet Mars",
+  "Cuisine": "Alien Food",
+  "Rating": 4.8,
+  "Seating_Capacity": 999999,
+  "Average_Meal_Price": 999999,
+  "Marketing_Budget": 999999999,
+  "Social_Media_Followers": 999999999,
+  "Chef_Experience_Years": 99,
+  "Number_of_Reviews": 999999,
+  "Avg_Review_Length": 9999,
+  "Ambience_Score": 99,
+  "Service_Quality_Score": 99,
+  "Weekend_Reservations": 999999,
+  "Weekday_Reservations": 999999,
+  "Parking_Availability": "Maybe"
+}
