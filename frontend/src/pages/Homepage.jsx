@@ -890,8 +890,8 @@ function HomePage() {
           display: 'flex', justifyContent: 'space-between',
           fontSize: '0.76rem', color: '#cfcfcf'
         }}>
-          <span>© 2026 Dicto — Politeknik Elektronika Negeri Surabaya</span>
-          <span>Supervised Learning · FastAPI · Docker · Vercel</span>
+          <span>© 2026 Dicto — Politeknik Elektronika Negeri Surabaya </span>
+          <span>Supervised Learning · FastAPI · Docker · Vercel </span>
         </div>
       </footer>
 
