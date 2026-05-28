@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom'
 import { useEffect, useRef, useState } from 'react'
-import { motion, useAnimation, animate } from 'framer-motion'
 
 function CountUp({ end, duration = 2000, suffix = '' }) {
   const [count, setCount] = useState(0)
@@ -28,365 +27,6 @@ function CountUp({ end, duration = 2000, suffix = '' }) {
   return <span ref={ref}>{count}{suffix}</span>
 }
 
-// Animated revenue number with comma formatting
-function AnimatedRevenue() {
-  const [display, setDisplay] = useState('0')
-  const ref = useRef(null)
-  const started = useRef(false)
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting && !started.current) {
-        started.current = true
-        const target = 125750000
-        const duration = 2200
-        const startTime = Date.now()
-        const timer = setInterval(() => {
-          const elapsed = Date.now() - startTime
-          const progress = Math.min(elapsed / duration, 1)
-          const eased = 1 - Math.pow(1 - progress, 4)
-          const current = Math.floor(eased * target)
-          setDisplay(current.toLocaleString('id-ID'))
-          if (progress === 1) clearInterval(timer)
-        }, 16)
-      }
-    }, { threshold: 0.5 })
-    if (ref.current) observer.observe(ref.current)
-    return () => observer.disconnect()
-  }, [])
-
-  return <span ref={ref}>{display}</span>
-}
-
-// Floating particle
-function Particle({ delay, x, y, size, duration }) {
-  return (
-    <motion.div
-      style={{
-        position: 'absolute',
-        left: x, top: y,
-        width: size, height: size,
-        borderRadius: '50%',
-        background: 'rgba(228,168,72,0.6)',
-        pointerEvents: 'none',
-      }}
-      animate={{
-        y: [0, -18, 0],
-        opacity: [0, 0.8, 0],
-        scale: [0.5, 1, 0.5],
-      }}
-      transition={{
-        duration,
-        delay,
-        repeat: Infinity,
-        ease: 'easeInOut',
-      }}
-    />
-  )
-}
-
-function RevenueCard() {
-  const particles = [
-    { delay: 0,    x: '12%',  y: '18%',  size: '5px',  duration: 3.2 },
-    { delay: 0.6,  x: '82%',  y: '12%',  size: '4px',  duration: 2.8 },
-    { delay: 1.1,  x: '55%',  y: '8%',   size: '3px',  duration: 3.5 },
-    { delay: 1.8,  x: '90%',  y: '45%',  size: '4px',  duration: 2.5 },
-    { delay: 0.3,  x: '5%',   y: '68%',  size: '3px',  duration: 4.0 },
-    { delay: 2.1,  x: '70%',  y: '85%',  size: '5px',  duration: 3.0 },
-    { delay: 1.4,  x: '35%',  y: '92%',  size: '3px',  duration: 2.9 },
-  ]
-
-  const barData = [
-    { label: 'Marketing Budget', val: 92, color: '#C1622F' },
-    { label: 'Rating Restoran',  val: 78, color: '#E4A848' },
-    { label: 'Kualitas Pelayanan', val: 65, color: '#D4886A' },
-  ]
-
-  return (
-    <div style={{
-      position: 'relative', zIndex: 2,
-      display: 'flex', justifyContent: 'center',
-    }}>
-      {/* Outer glow ring */}
-      <motion.div
-        animate={{ opacity: [0.4, 0.9, 0.4], scale: [1, 1.04, 1] }}
-        transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
-        style={{
-          position: 'absolute',
-          inset: '-18px',
-          borderRadius: '28px',
-          background: 'radial-gradient(ellipse at 50% 50%, rgba(193,98,47,0.18) 0%, transparent 70%)',
-          pointerEvents: 'none',
-          zIndex: 0,
-        }}
-      />
-
-      <motion.div
-        initial={{ opacity: 0, y: 32 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: 'easeOut' }}
-        style={{
-          background: 'white', borderRadius: '20px',
-          padding: '28px', width: '360px',
-          boxShadow: '0 24px 64px rgba(193,98,47,0.16), 0 4px 16px rgba(0,0,0,0.06)',
-          position: 'relative', overflow: 'visible', zIndex: 1,
-        }}
-      >
-        {/* Floating particles */}
-        {particles.map((p, i) => <Particle key={i} {...p} />)}
-
-        {/* Subtle shimmer overlay */}
-        <motion.div
-          animate={{ x: ['-100%', '200%'] }}
-          transition={{ duration: 4, repeat: Infinity, repeatDelay: 3, ease: 'linear' }}
-          style={{
-            position: 'absolute', top: 0, left: 0,
-            width: '40%', height: '100%',
-            background: 'linear-gradient(90deg, transparent, rgba(228,168,72,0.06), transparent)',
-            pointerEvents: 'none', zIndex: 0,
-          }}
-        />
-
-        {/* Pill top */}
-        <motion.div
-          initial={{ opacity: 0, x: 12 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.4, duration: 0.5 }}
-          style={{
-            position: 'absolute', top: '-16px', right: '-12px',
-            background: 'white', borderRadius: '12px',
-            padding: '8px 14px',
-            boxShadow: '0 6px 20px rgba(193,98,47,0.12)',
-            display: 'flex', alignItems: 'center', gap: '6px',
-            fontSize: '0.78rem', fontWeight: 600, color: '#1E1208',
-            border: '1px solid #E8DCCB', zIndex: 20,
-          }}
-        >
-          🍽️ Restoran Nusantara
-        </motion.div>
-
-        {/* Card header */}
-        <motion.div
-          initial={{ opacity: 0, y: -8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15, duration: 0.5 }}
-          style={{
-            display: 'flex', justifyContent: 'space-between',
-            alignItems: 'center', marginBottom: '20px', position: 'relative', zIndex: 1,
-          }}
-        >
-          <div>
-            <div style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#7A6550' }}>
-              Prediksi Revenue 1 Tahun
-            </div>
-            <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#1E1208', marginTop: '2px' }}>
-              Hasil Analisis Model
-            </div>
-          </div>
-          <motion.div
-            animate={{ scale: [1, 1.08, 1] }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-            style={{
-              background: 'rgba(228,168,72,0.15)',
-              color: '#8A6010', border: '1px solid rgba(228,168,72,0.30)',
-              fontSize: '0.72rem', fontWeight: 700,
-              padding: '4px 10px', borderRadius: '20px',
-              display: 'flex', alignItems: 'center', gap: '4px',
-            }}
-          >
-            ↑ 12.5%
-          </motion.div>
-        </motion.div>
-
-        {/* Revenue box */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.92 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.3, duration: 0.6, ease: 'backOut' }}
-          style={{
-            borderRadius: '14px', padding: '22px',
-            textAlign: 'center', marginBottom: '20px',
-            position: 'relative', overflow: 'visible', zIndex: 1,
-            background: '#C1622F',
-          }}
-        >
-          {/* Animated glow pulse inside revenue box */}
-          <motion.div
-            animate={{ opacity: [0.15, 0.45, 0.15], scale: [1, 1.15, 1] }}
-            transition={{ duration: 2.8, repeat: Infinity, ease: 'easeInOut' }}
-            style={{
-              position: 'absolute', top: '-30px', right: '-30px',
-              width: '110px', height: '110px', borderRadius: '50%',
-              background: 'rgba(255,255,255,0.14)',
-              pointerEvents: 'none',
-            }}
-          />
-          <motion.div
-            animate={{ opacity: [0.08, 0.2, 0.08], scale: [1, 1.2, 1] }}
-            transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut', delay: 0.8 }}
-            style={{
-              position: 'absolute', bottom: '-20px', left: '-20px',
-              width: '80px', height: '80px', borderRadius: '50%',
-              background: 'rgba(228,168,72,0.3)',
-              pointerEvents: 'none',
-            }}
-          />
-
-          <div style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.75)', marginBottom: '8px', letterSpacing: '0.05em', position: 'relative', zIndex: 1 }}>
-            Estimasi Pendapatan Tahunan
-          </div>
-
-          {/* Big revenue number */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.5 }}
-            style={{
-              fontFamily: "'Playfair Display', serif",
-              fontSize: '1.9rem', fontWeight: 900,
-              color: 'white', letterSpacing: '-1px',
-              position: 'relative', zIndex: 1,
-            }}
-          >
-            Rp <AnimatedRevenue />
-          </motion.div>
-
-          <div style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.65)', marginTop: '4px', position: 'relative', zIndex: 1 }}>
-            Dibanding periode sebelumnya
-          </div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.9, duration: 0.4 }}
-            style={{
-              display: 'inline-flex', alignItems: 'center', gap: '4px',
-              background: 'rgba(228,168,72,0.25)', color: '#F5D070',
-              fontSize: '0.7rem', fontWeight: 700,
-              padding: '3px 10px', borderRadius: '12px', marginTop: '8px',
-              position: 'relative', zIndex: 1,
-            }}
-          >
-            <motion.span
-              animate={{ y: [0, -2, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
-            >
-              📈
-            </motion.span>
-            Naik dari bulan lalu
-          </motion.div>
-        </motion.div>
-
-        {/* Accuracy section */}
-        <motion.div
-          initial={{ opacity: 0, x: -12 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.55, duration: 0.5 }}
-          style={{ marginBottom: '16px', position: 'relative', zIndex: 1 }}
-        >
-          <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#7A6550', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '8px' }}>
-            Tingkat Akurasi Model
-          </div>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '6px' }}>
-            <motion.div
-              initial={{ scale: 0.6, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.7, duration: 0.5, type: 'spring', stiffness: 200 }}
-              style={{
-                fontFamily: "'Playfair Display', serif",
-                fontSize: '1.6rem', fontWeight: 900, color: '#E4A848',
-              }}
-            >
-              <CountUp end={84} duration={2000} suffix="%" />
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1.2 }}
-              style={{ fontSize: '0.78rem', color: '#C1622F', fontWeight: 600 }}
-            >
-              Sangat Baik
-            </motion.div>
-          </div>
-          {/* Accuracy bar */}
-          <div style={{ height: '5px', background: '#F0E8DA', borderRadius: '3px', overflow: 'hidden' }}>
-            <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: '84%' }}
-              transition={{ delay: 0.8, duration: 1.2, ease: 'easeOut' }}
-              style={{ height: '5px', background: 'linear-gradient(90deg, #E4A848, #C1622F)', borderRadius: '3px' }}
-            />
-          </div>
-        </motion.div>
-
-        {/* Factor bars */}
-        <div style={{ fontSize: '0.7rem', fontWeight: 700, color: '#7A6550', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '10px', position: 'relative', zIndex: 1 }}>
-          Faktor Dominan
-        </div>
-
-        {barData.map((item, i) => (
-          <motion.div
-            key={item.label}
-            initial={{ opacity: 0, x: -16 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.75 + i * 0.15, duration: 0.45 }}
-            style={{ marginBottom: '8px', position: 'relative', zIndex: 1 }}
-          >
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
-              <span style={{ fontSize: '0.78rem', color: '#1E1208' }}>{item.label}</span>
-              <motion.span
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1.0 + i * 0.15 }}
-                style={{ fontSize: '0.72rem', color: '#7A6550', fontFamily: 'DM Mono, monospace' }}
-              >
-                {item.val}%
-              </motion.span>
-            </div>
-            <div style={{ height: '4px', background: '#F0E8DA', borderRadius: '2px', overflow: 'hidden' }}>
-              <motion.div
-                initial={{ width: 0 }}
-                animate={{ width: `${item.val}%` }}
-                transition={{ delay: 0.9 + i * 0.15, duration: 1.1, ease: 'easeOut' }}
-                style={{
-                  height: '4px',
-                  background: `linear-gradient(90deg, ${item.color}, ${item.color}99)`,
-                  borderRadius: '2px',
-                }}
-              />
-            </div>
-          </motion.div>
-        ))}
-
-        {/* Pill bottom */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.1, duration: 0.5 }}
-          style={{
-            position: 'absolute', bottom: '-14px', left: '-14px',
-            background: 'white', borderRadius: '12px',
-            padding: '8px 14px',
-            boxShadow: '0 6px 20px rgba(228,168,72,0.15)',
-            display: 'flex', alignItems: 'center', gap: '6px',
-            fontSize: '0.76rem', color: '#7A6550',
-            border: '1px solid #E8DCCB', zIndex: 20,
-          }}
-        >
-          <motion.span
-            animate={{ rotate: [0, 10, -10, 0] }}
-            transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-    
-          >
-            🤖
-          </motion.span>
-          Supervised Learning Model
-        </motion.div>
-      </motion.div>
-    </div>
-  )
-}
-
 function HomePage() {
   return (
     <div style={{ paddingTop: '64px', background: '#FBF6EE', minHeight: '100vh' }}>
@@ -398,7 +38,7 @@ function HomePage() {
         alignItems: 'center', gap: '48px',
         padding: '80px 64px',
         background: '#FBF6EE',
-        position: 'relative', overflow: 'visible'
+        position: 'relative', overflow: 'hidden'
       }}>
         {/* Background blobs */}
         <div style={{
@@ -536,7 +176,7 @@ function HomePage() {
           }}>
             {[
               { num: 15, suffix: '', label: 'Variabel Input' },
-              { num: 99, suffix: '%', label: 'Akurasi Model' },
+              { num: 84, suffix: '%', label: 'Akurasi Model' },
               { num: 3, suffix: '', label: 'Model Tersedia' },
             ].map((stat) => (
               <div key={stat.label}>
@@ -555,8 +195,138 @@ function HomePage() {
           </div>
         </div>
 
-        {/* Right Card — ANIMATED */}
-        <RevenueCard />
+        {/* Right Card */}
+        <div style={{
+          position: 'relative', zIndex: 2,
+          display: 'flex', justifyContent: 'center',
+          animation: 'fadeUp 0.9s 0.2s ease both'
+        }}>
+          <div style={{
+            background: 'white', borderRadius: '20px',
+            padding: '28px', width: '360px',
+            boxShadow: '0 24px 64px rgba(193,98,47,0.12), 0 4px 16px rgba(0,0,0,0.06)',
+            position: 'relative'
+          }}>
+            {/* Pill top */}
+            <div style={{
+              position: 'absolute', top: '-16px', right: '-12px',
+              background: 'white', borderRadius: '12px',
+              padding: '8px 14px',
+              boxShadow: '0 6px 20px rgba(193,98,47,0.12)',
+              display: 'flex', alignItems: 'center', gap: '6px',
+              fontSize: '0.78rem', fontWeight: 600, color: '#1E1208',
+              border: '1px solid #E8DCCB'
+            }}>
+              🍽️ Restoran Nusantara
+            </div>
+
+            {/* Card header */}
+            <div style={{
+              display: 'flex', justifyContent: 'space-between',
+              alignItems: 'center', marginBottom: '20px'
+            }}>
+              <div>
+                <div style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#7A6550' }}>
+                  Prediksi Revenue (30 Hari)
+                </div>
+                <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#1E1208', marginTop: '2px' }}>
+                  Hasil Analisis Model
+                </div>
+              </div>
+              <div style={{
+                background: 'rgba(228,168,72,0.15)',
+                color: '#8A6010', border: '1px solid rgba(228,168,72,0.30)',
+                fontSize: '0.72rem', fontWeight: 700,
+                padding: '4px 10px', borderRadius: '20px',
+                display: 'flex', alignItems: 'center', gap: '4px'
+              }}>
+                ↑ 12.5%
+              </div>
+            </div>
+
+            {/* Revenue box */}
+            <div style={{
+              background: '#C1622F',
+              borderRadius: '14px', padding: '22px',
+              textAlign: 'center', marginBottom: '20px',
+              position: 'relative', overflow: 'hidden'
+            }}>
+              <div style={{
+                position: 'absolute', top: '-20px', right: '-20px',
+                width: '80px', height: '80px', borderRadius: '50%',
+                background: 'rgba(255,255,255,0.08)'
+              }} />
+              <div style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.75)', marginBottom: '8px', letterSpacing: '0.05em' }}>
+                Estimasi Pendapatan Bulanan
+              </div>
+              <div style={{
+                fontFamily: "'Playfair Display', serif",
+                fontSize: '1.9rem', fontWeight: 900,
+                color: 'white', letterSpacing: '-1px'
+              }}>
+                Rp 125.750.000
+              </div>
+              <div style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.65)', marginTop: '4px' }}>
+                Dibanding periode sebelumnya
+              </div>
+              <div style={{
+                display: 'inline-flex', alignItems: 'center', gap: '4px',
+                background: 'rgba(228,168,72,0.25)', color: '#F5D070',
+                fontSize: '0.7rem', fontWeight: 700,
+                padding: '3px 10px', borderRadius: '12px', marginTop: '8px'
+              }}>
+                📈 Naik dari bulan lalu
+              </div>
+            </div>
+
+            {/* Accuracy */}
+            <div style={{ marginBottom: '16px' }}>
+              <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#7A6550', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '8px' }}>
+                Tingkat Akurasi Model
+              </div>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '6px' }}>
+                <div style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.6rem', fontWeight: 900, color: '#1E1208' }}>84%</div>
+                <div style={{ fontSize: '0.78rem', color: '#C1622F', fontWeight: 600 }}>Sangat Baik</div>
+              </div>
+              <div style={{ height: '5px', background: '#F0E8DA', borderRadius: '3px' }}>
+                <div style={{ width: '84%', height: '5px', background: '#E4A848', borderRadius: '3px' }} />
+              </div>
+            </div>
+
+            {/* Factors */}
+            <div style={{ fontSize: '0.7rem', fontWeight: 700, color: '#7A6550', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '10px' }}>
+              Faktor Dominan
+            </div>
+            {[
+              { label: 'Marketing Budget', val: 92, color: '#C1622F' },
+              { label: 'Rating Restoran', val: 78, color: '#E4A848' },
+              { label: 'Kualitas Pelayanan', val: 65, color: '#D4886A' },
+            ].map(item => (
+              <div key={item.label} style={{ marginBottom: '8px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+                  <span style={{ fontSize: '0.78rem', color: '#1E1208' }}>{item.label}</span>
+                  <span style={{ fontSize: '0.72rem', color: '#7A6550', fontFamily: 'DM Mono, monospace' }}>{item.val}%</span>
+                </div>
+                <div style={{ height: '4px', background: '#F0E8DA', borderRadius: '2px' }}>
+                  <div style={{ width: `${item.val}%`, height: '4px', background: item.color, borderRadius: '2px' }} />
+                </div>
+              </div>
+            ))}
+
+            {/* Pill bottom */}
+            <div style={{
+              position: 'absolute', bottom: '-14px', left: '-14px',
+              background: 'white', borderRadius: '12px',
+              padding: '8px 14px',
+              boxShadow: '0 6px 20px rgba(228,168,72,0.12)',
+              display: 'flex', alignItems: 'center', gap: '6px',
+              fontSize: '0.76rem', color: '#7A6550',
+              border: '1px solid #E8DCCB'
+            }}>
+              🤖 Supervised Learning Model
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* ── FEATURES ── */}
@@ -677,7 +447,7 @@ function HomePage() {
               {[
                 { num: '15', label: 'Fitur Input', desc: 'Variabel operasional restoran' },
                 { num: 'SLR', label: 'Metode', desc: 'Supervised Learning Regresi' },
-                { num: '~99%', label: 'Akurasi', desc: 'Hasil validasi model' },
+                { num: '~84%', label: 'Akurasi', desc: 'Hasil validasi model' },
                 { num: 'MLflow', label: 'Tracking', desc: 'Eksperimen terkelola' },
               ].map((item) => (
                 <div key={item.label} style={{
@@ -695,7 +465,7 @@ function HomePage() {
                   </div>
                   <div>
                     <div style={{ fontWeight: 600, color: 'white', fontSize: '0.88rem' }}>{item.label}</div>
-                    <div style={{ fontSize: '0.76rem', color: '#8f7a70', marginTop: '2px' }}>{item.desc}</div>
+                    <div style={{ fontSize: '0.76rem', color: '#5A3E30', marginTop: '2px' }}>{item.desc}</div>
                   </div>
                 </div>
               ))}
@@ -750,7 +520,7 @@ function HomePage() {
                 padding: '32px 24px', textAlign: 'center',
                 border: '1px solid #E8DCCB',
                 boxShadow: '0 4px 16px rgba(30,18,8,0.04)',
-                position: 'relative', overflow: 'visible'
+                position: 'relative', overflow: 'hidden'
               }}>
                 <div style={{
                   position: 'absolute', top: 0, left: 0, right: 0,
@@ -854,12 +624,12 @@ function HomePage() {
           }}>
             Di<span style={{ color: '#C1622F' }}>cto</span>
           </div>
-          <div style={{ fontSize: '0.7rem', color: '#cfcfcf', marginBottom: '12px', letterSpacing: '0.04em' }}>
+          <div style={{ fontSize: '0.7rem', color: '#5A3E30', marginBottom: '12px', letterSpacing: '0.04em' }}>
             AI Revenue Prediction
           </div>
-          <p style={{ fontSize: '0.82rem', color: '#cfcfcf', lineHeight: 1.7 }}>
+          <p style={{ fontSize: '0.82rem', color: '#4A3028', lineHeight: 1.7 }}>
             Sistem prediksi pendapatan restoran berbasis Supervised Learning.
-            Project Based Learning — PENS 2026.
+            Proyek PBL — PENS 2025.
           </p>
         </div>
         {[
@@ -877,7 +647,7 @@ function HomePage() {
             <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {col.links.map(link => (
                 <li key={link}>
-                  <a href="#" style={{ color: '#cfcfcf', fontSize: '0.84rem', textDecoration: 'none' }}>
+                  <a href="#" style={{ color: '#4A3028', fontSize: '0.84rem', textDecoration: 'none' }}>
                     {link}
                   </a>
                 </li>
@@ -889,9 +659,9 @@ function HomePage() {
           gridColumn: '1/-1', marginTop: '20px', paddingTop: '20px',
           borderTop: '1px solid rgba(255,255,255,0.07)',
           display: 'flex', justifyContent: 'space-between',
-          fontSize: '0.76rem', color: '#cfcfcf'
+          fontSize: '0.76rem', color: '#3A2820'
         }}>
-          <span>© 2026 Dicto — Politeknik Elektronika Negeri Surabaya</span>
+          <span>© 2025 Dicto — Politeknik Elektronika Negeri Surabaya</span>
           <span>Supervised Learning · FastAPI · Docker · Vercel</span>
         </div>
       </footer>
