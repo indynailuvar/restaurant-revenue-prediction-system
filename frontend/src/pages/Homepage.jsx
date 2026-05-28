@@ -808,7 +808,7 @@ function HomePage() {
             Siap Meningkatkan Revenue Restoran Anda?
           </h2>
           <p style={{ color: '#7A6550', fontSize: '1rem', lineHeight: 1.6 }}>
-            Mulai prediksi sekarang dan dapatkan insight berharga untuk mengembangkan bisnis kuliner Anda.
+            Mulai prediksi sekarang dan dapatkan insight berharga untuk mengembangkan bisnis kuliner Anda
           </p>
         </div>
         <div style={{ textAlign: 'center' }}>
