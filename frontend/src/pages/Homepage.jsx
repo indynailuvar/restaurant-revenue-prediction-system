@@ -859,7 +859,7 @@ function HomePage() {
           </div>
           <p style={{ fontSize: '0.82rem', color: '#cfcfcf', lineHeight: 1.7 }}>
             Sistem prediksi pendapatan restoran berbasis Supervised Learning.
-            Project Based Learning — PENS 2026.
+            Project Based Learning — PENS 2026
           </p>
         </div>
         {[

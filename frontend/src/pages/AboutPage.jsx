@@ -194,7 +194,7 @@ function AboutPage() {
           </h2>
           <p style={{ color: '#7A6550', fontSize: '0.9rem', marginBottom: '8px' }}>
             Proyek Gabungan 3 Mata Kuliah
-          </p>
+          </p> 
           <div style={{ display: 'flex', gap: '8px', marginBottom: '28px', flexWrap: 'wrap' }}>
             {['Data Mining', 'MLOps', 'Teknologi Web Service'].map(mk => (
               <span key={mk} style={{
@@ -253,7 +253,7 @@ function AboutPage() {
             Siap Memprediksi Pendapatan Restoran?
           </h2>
           <p style={{ color: '#7A6550', marginBottom: '28px', fontSize: '0.95rem', maxWidth: '400px', margin: '0 auto 28px' }}>
-            Masukkan data restoran dan dapatkan estimasi pendapatan menggunakan model Supervised Learning.
+            Masukkan data restoran dan dapatkan estimasi pendapatan menggunakan model Gradient Boosting.
           </p>
           <Link to="/input" style={{
             background: '#C1622F', color: 'white',

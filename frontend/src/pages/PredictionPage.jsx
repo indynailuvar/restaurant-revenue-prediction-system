@@ -293,7 +293,7 @@ function PredictionPage() {
             marginBottom: '20px'
           }}>
             <div style={{ fontWeight: 700, color: '#C1622F', marginBottom: '8px', fontSize: '0.88rem' }}>
-              ⚠️ Peringatan Validasi
+              ⚠️Peringatan Validasi
             </div>
             {result.validation_warnings.map((w, i) => (
               <div key={i} style={{ fontSize: '0.82rem', color: '#7A6550', marginBottom: '4px' }}>

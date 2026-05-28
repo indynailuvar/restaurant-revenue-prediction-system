@@ -86,14 +86,14 @@ function InputPage() {
           name: 'Marketing_Budget',
           label: 'Budget Marketing (USD)',
           type: 'number',
-          placeholder: 'cth. 300',
+          placeholder: 'cth. 100',
           span: 1
         },
         {
           name: 'Social_Media_Followers',
           label: 'Followers Media Sosial',
           type: 'number',
-          placeholder: 'cth. 12000',
+          placeholder: 'cth. 2000',
           span: 2
         },
      ]

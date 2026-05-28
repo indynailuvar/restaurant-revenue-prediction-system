@@ -140,7 +140,7 @@ function InsightPage() {
   ]
 
   const limitations = [
-    { icon: '📊', title: 'Keterbatasan Dataset', desc: 'Model dilatih pada dataset yang mungkin tidak merepresentasikan semua jenis restoran di Indonesia secara penuh.' },
+    { icon: '📊', title: 'Keterbatasan Dataset', desc: 'Model dilatih pada dataset yang mungkin tidak merepresentasikan semua jenis restoran, hanya diwilayah tertentu saja.' },
     { icon: '🌍', title: 'Faktor Eksternal', desc: 'Model tidak mempertimbangkan faktor eksternal seperti kondisi ekonomi, musim, tren kuliner, dan kompetitor.' },
     { icon: '⏰', title: 'Perubahan Waktu', desc: 'Perilaku konsumen berubah seiring waktu. Model perlu dilatih ulang secara berkala dengan data terbaru.' },
     { icon: '📍', title: 'Spesifisitas Lokasi', desc: 'Prediksi mungkin kurang akurat untuk lokasi dengan karakteristik pasar yang sangat berbeda dari data training.' },
