@@ -1,0 +1,2 @@
+[SUCCESS] Artifact model berhasil di-load.
+{'model_loaded': True, 'scaler_loaded': True, 'feature_names_loaded': True, 'encoders_loaded': True, 'model_type': "<class 'sklearn.linear_model._ridge.Ridge'>", 'scaler_type': "<class 'sklearn.preprocessing._data.StandardScaler'>", 'feature_names_type': "<class 'list'>", 'encoders_type': "<class 'dict'>", 'total_features': 15}
