@@ -67,18 +67,36 @@ function InputPage() {
       title: 'Kualitas & Penilaian', icon: '⭐', color: '#E4A848',
       fields: [
         { name: 'Rating', label: 'Rating Restoran (1–5)', type: 'number', placeholder: 'cth. 4.5', span: 1 },
-        { name: 'Ambience_Score', label: 'Skor Ambience (1–5)', type: 'number', placeholder: 'cth. 4.3', span: 1 },
-        { name: 'Service_Quality_Score', label: 'Skor Kualitas Pelayanan (1–5)', type: 'number', placeholder: 'cth. 4.4', span: 1 },
+        { name: 'Ambience_Score', label: 'Skor Ambience (1–10)', type: 'number', placeholder: 'cth. 4.3', span: 1 },
+        { name: 'Service_Quality_Score', label: 'Skor Kualitas Pelayanan (1–10)', type: 'number', placeholder: 'cth. 4.4', span: 1 },
         { name: 'Chef_Experience_Years', label: 'Pengalaman Chef (tahun)', type: 'number', placeholder: 'cth. 8', span: 1 },
       ]
     },
     {
-      title: 'Keuangan & Marketing', icon: '💰', color: '#C1622F',
+     title: 'Keuangan & Marketing', icon: '💰', color: '#C1622F',
       fields: [
-        { name: 'Average_Meal_Price', label: 'Harga Rata-rata Makanan (Rp)', type: 'number', placeholder: 'cth. 150000', span: 1 },
-        { name: 'Marketing_Budget', label: 'Budget Marketing (Rp)', type: 'number', placeholder: 'cth. 5000000', span: 1 },
-        { name: 'Social_Media_Followers', label: 'Followers Media Sosial', type: 'number', placeholder: 'cth. 12000', span: 2 },
-      ]
+        {
+          name: 'Average_Meal_Price',
+          label: 'Harga Rata-rata Makanan (USD)',
+          type: 'number',
+          placeholder: 'cth. 10',
+          span: 1
+        },
+        {
+          name: 'Marketing_Budget',
+          label: 'Budget Marketing (USD)',
+          type: 'number',
+          placeholder: 'cth. 300',
+          span: 1
+        },
+        {
+          name: 'Social_Media_Followers',
+          label: 'Followers Media Sosial',
+          type: 'number',
+          placeholder: 'cth. 12000',
+          span: 2
+        },
+     ]
     },
     {
       title: 'Ulasan & Reservasi', icon: '💬', color: '#E4A848',
