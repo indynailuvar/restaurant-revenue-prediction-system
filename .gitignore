@@ -17,3 +17,16 @@ mlflow.db
 # Python cache
 __pycache__/
 *.pyc
+
+# Local environment
+venv/
+.venv/
+
+# MLflow local artifacts
+mlartifacts/
+mlruns/
+mlflow.db
+
+# Python cache
+__pycache__/
+*.pyc
