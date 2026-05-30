@@ -21,7 +21,7 @@ services:
   backend:
     build:
       context: .
-      dockerfile: backend/Dockerfile
+      dockerfile: backend/app/Dockerfile
 
     container_name: dicto-backend
     restart: unless-stopped
