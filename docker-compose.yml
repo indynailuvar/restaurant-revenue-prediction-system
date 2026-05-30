@@ -19,21 +19,23 @@ services:
       retries: 5
 
   backend:
-    build: ./backend
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+
     container_name: dicto-backend
     restart: unless-stopped
+
     ports:
       - "8000:8000"
+
     volumes:
       - ./models/trained:/app/models/trained
+
     environment:
-      - MODEL_PATH=/app/models/trained/best_model.pkl
-      - ENCODERS_PATH=/app/models/trained/encoders.pkl
-      - FEATURE_NAMES_PATH=/app/models/trained/feature_names.pkl
-      - SCALER_PATH=/app/models/trained/scaler.pkl
-      - TRAINING_METADATA_PATH=/app/models/trained/training_metadata.json
       - USD_TO_IDR_RATE=16000
-      - DATABASE_URL=postgresql://postgres:1234@db:5434/restaurant
+      - DATABASE_URL=postgresql://postgres:1234@db:5432/restaurant
+
     depends_on:
       db:
         condition: service_healthy
@@ -42,16 +44,15 @@ services:
     build: ./frontend
     container_name: dicto-frontend
     restart: unless-stopped
+
     ports:
       - "5175:5173"
+
     environment:
-      - VITE_API_URL=http://backend:8000
+      - VITE_API_URL=http://localhost:8000
+
     depends_on:
       - backend
-
-networks:
-  default:
-    name: dicto-network
 
 volumes:
   postgres_data:
