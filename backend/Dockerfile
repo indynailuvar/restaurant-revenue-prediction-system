@@ -15,12 +15,12 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # copy backend requirements saja
-COPY requirements-backend.txt .
+COPY requirements.txt .
+RUN pip install -r requirements.txt
 
 RUN pip install --upgrade pip setuptools wheel
 
-# install dependencies backend (NO JUPYTER, NO WINPTY ISSUE)
-RUN pip install --no-cache-dir -r requirements-backend.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
