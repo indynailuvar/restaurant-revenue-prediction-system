@@ -2,6 +2,7 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
+# system deps (untuk numpy, sklearn, cryptography, dll)
 RUN apt-get update && apt-get install -y \
     build-essential \
     gcc \
@@ -13,12 +14,13 @@ RUN apt-get update && apt-get install -y \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt .
+# copy backend requirements saja
+COPY requirements-backend.txt .
 
-# upgrade pip biar wheel lebih sering kepakai (ngurangin compile)
 RUN pip install --upgrade pip setuptools wheel
 
-RUN pip install --no-cache-dir -r requirements.txt
+# install dependencies backend (NO JUPYTER, NO WINPTY ISSUE)
+RUN pip install --no-cache-dir -r requirements-backend.txt
 
 COPY . .
 
