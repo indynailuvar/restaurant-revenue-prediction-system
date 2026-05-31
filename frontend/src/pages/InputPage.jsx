@@ -26,7 +26,22 @@ function InputPage() {
   }
 
   const handleSubmit = () => {
-    localStorage.setItem('predictionInput', JSON.stringify(formData))
+    const processedData = {
+      ...formData,
+      Rating: parseFloat(formData.Rating),
+      Seating_Capacity: parseInt(formData.Seating_Capacity),
+      Average_Meal_Price: parseFloat(formData.Average_Meal_Price),
+      Marketing_Budget: parseFloat(formData.Marketing_Budget),
+      Social_Media_Followers: parseInt(formData.Social_Media_Followers),
+      Chef_Experience_Years: parseInt(formData.Chef_Experience_Years),
+      Number_of_Reviews: parseInt(formData.Number_of_Reviews),
+      Avg_Review_Length: parseFloat(formData.Avg_Review_Length),
+      Ambience_Score: parseFloat(formData.Ambience_Score),
+      Service_Quality_Score: parseFloat(formData.Service_Quality_Score),
+      Weekend_Reservations: parseInt(formData.Weekend_Reservations),
+      Weekday_Reservations: parseInt(formData.Weekday_Reservations),
+    }
+    localStorage.setItem('predictionInput', JSON.stringify(processedData))
     navigate('/prediction')
   }
 
@@ -86,14 +101,14 @@ function InputPage() {
           name: 'Marketing_Budget',
           label: 'Budget Marketing (USD)',
           type: 'number',
-          placeholder: 'cth. 300',
+          placeholder: 'cth. 100',
           span: 1
         },
         {
           name: 'Social_Media_Followers',
           label: 'Followers Media Sosial',
           type: 'number',
-          placeholder: 'cth. 12000',
+          placeholder: 'cth. 2000',
           span: 2
         },
      ]
