@@ -19,7 +19,11 @@ function AboutPage() {
   const models = [
     { icon: '🌲', name: 'Random Forest', desc: 'Model ensemble berbasis decision tree yang robust untuk prediksi revenue restoran.' },
     { icon: '⚡', name: 'Gradient Boosting', desc: 'Model boosting sekuensial dengan performa tinggi pada dataset revenue restoran.' },
-    { icon: '📈', name: 'Linear Regression', desc: 'Model baseline regresi untuk memprediksi nilai kontinu pendapatan restoran.' },
+    { icon: '📈', name: 'Ridge Regression', desc: 'Model baseline regresi untuk memprediksi nilai kontinu pendapatan restoran.' },
+
+    { icon: '🌲', name: 'Random Forest', desc: 'R² = 0.9982, MAE = 12.98.' },
+    { icon: '⚡', name: 'Gradient Boosting', desc: 'Model terbaik — R² = 0.9996, MAE = 3810.59. Champion model di MLflow Registry.' },
+    { icon: '📈', name: 'Ridge Regression', desc: 'R² = 0.8540. Model baseline pembanding.' },
   ]
 
   const stack = [
@@ -66,7 +70,7 @@ function AboutPage() {
           Pemodelan Prediksi Pendapatan Restoran<br />
           <span style={{ color: '#D4886A' }}>Menggunakan Metode Supervised Learning Berbasis Regresi</span>
         </h1>
-        <p style={{ color: '#5A3E30', fontSize: '0.95rem', lineHeight: 1.7, maxWidth: '520px', margin: '0 auto 12px', position: 'relative', zIndex: 1 }}>
+        <p style={{ color: '#a99d98', fontSize: '0.95rem', lineHeight: 1.7, maxWidth: '520px', margin: '0 auto 12px', position: 'relative', zIndex: 1 }}>
           Project Based Learning — Proyek Gabungan 3 Mata Kuliah
         </p>
         <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', marginBottom: '28px', flexWrap: 'wrap', position: 'relative', zIndex: 1 }}>
@@ -80,8 +84,8 @@ function AboutPage() {
             </span>
           ))}
         </div>
-        <p style={{ color: '#3A2820', fontSize: '0.85rem', marginBottom: '28px', position: 'relative', zIndex: 1 }}>
-          Politeknik Elektronika Negeri Surabaya 2025
+        <p style={{ color: '#a99d98', fontSize: '0.85rem', marginBottom: '28px', position: 'relative', zIndex: 1 }}>
+          Politeknik Elektronika Negeri Surabaya 2026
         </p>
         <Link to="/input" style={{
           background: '#C1622F', color: 'white',

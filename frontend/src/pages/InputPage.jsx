@@ -4,13 +4,21 @@ import { useNavigate } from 'react-router-dom'
 function InputPage() {
   const navigate = useNavigate()
   const [formData, setFormData] = useState({
-    Location: '', Cuisine: '', Rating: '',
-    Seating_Capacity: '', Average_Meal_Price: '',
-    Marketing_Budget: '', Social_Media_Followers: '',
-    Chef_Experience_Years: '', Number_of_Reviews: '',
-    Avg_Review_Length: '', Ambience_Score: '',
-    Service_Quality_Score: '', Weekend_Reservations: '',
-    Weekday_Reservations: '', Parking_Availability: '',
+    Location: '',
+    Cuisine: '',
+    Rating: '',
+    Seating_Capacity: '',
+    Average_Meal_Price: '',
+    Marketing_Budget: '',
+    Social_Media_Followers: '',
+    Chef_Experience_Years: '',
+    Number_of_Reviews: '',
+    Avg_Review_Length: '',
+    Ambience_Score: '',
+    Service_Quality_Score: '',
+    Weekend_Reservations: '',
+    Weekday_Reservations: '',
+    Parking_Availability: '',
   })
 
   const handleChange = (e) => {
@@ -18,44 +26,100 @@ function InputPage() {
   }
 
   const handleSubmit = () => {
-    localStorage.setItem('predictionInput', JSON.stringify(formData))
+    const processedData = {
+      ...formData,
+      Rating: parseFloat(formData.Rating),
+      Seating_Capacity: parseInt(formData.Seating_Capacity),
+      Average_Meal_Price: parseFloat(formData.Average_Meal_Price),
+      Marketing_Budget: parseFloat(formData.Marketing_Budget),
+      Social_Media_Followers: parseInt(formData.Social_Media_Followers),
+      Chef_Experience_Years: parseInt(formData.Chef_Experience_Years),
+      Number_of_Reviews: parseInt(formData.Number_of_Reviews),
+      Avg_Review_Length: parseFloat(formData.Avg_Review_Length),
+      Ambience_Score: parseFloat(formData.Ambience_Score),
+      Service_Quality_Score: parseFloat(formData.Service_Quality_Score),
+      Weekend_Reservations: parseInt(formData.Weekend_Reservations),
+      Weekday_Reservations: parseInt(formData.Weekday_Reservations),
+    }
+    localStorage.setItem('predictionInput', JSON.stringify(processedData))
     navigate('/prediction')
   }
+
+  const inputStyle = (color) => ({
+    width: '100%', padding: '11px 14px',
+    borderRadius: '8px', border: '1.5px solid #E8DCCB',
+    background: '#FBF6EE', fontFamily: 'DM Sans, sans-serif',
+    fontSize: '0.9rem', color: '#1E1208',
+    outline: 'none', transition: 'border-color .2s, background .2s',
+    appearance: 'none'
+  })
 
   const sections = [
     {
       title: 'Informasi Umum', icon: '📍', color: '#C1622F',
       fields: [
-        { name: 'Location', label: 'Lokasi Restoran', type: 'text', placeholder: 'cth. Surabaya', span: 1 },
-        { name: 'Cuisine', label: 'Jenis Masakan', type: 'text', placeholder: 'cth. Indonesian', span: 1 },
-        { name: 'Seating_Capacity', label: 'Kapasitas Tempat Duduk', type: 'number', placeholder: 'cth. 80', span: 1 },
-        { name: 'Parking_Availability', label: 'Ketersediaan Parkir', type: 'text', placeholder: 'Yes / No', span: 1 },
+        {
+          name: 'Location', label: 'Lokasi Restoran', type: 'select',
+          options: ['', 'Downtown', 'Rural', 'Suburban'],
+          placeholder: 'Pilih lokasi', span: 1
+        },
+        {
+          name: 'Cuisine', label: 'Jenis Masakan', type: 'text',
+          placeholder: 'cth. Japanese', span: 1
+        },
+        {
+          name: 'Seating_Capacity', label: 'Kapasitas Tempat Duduk', type: 'number',
+          placeholder: 'cth. 80', span: 1
+        },
+        {
+          name: 'Parking_Availability', label: 'Ketersediaan Parkir', type: 'select',
+          options: ['', 'Yes', 'No'],
+          placeholder: 'Pilih', span: 1
+        },
       ]
     },
     {
       title: 'Kualitas & Penilaian', icon: '⭐', color: '#E4A848',
       fields: [
         { name: 'Rating', label: 'Rating Restoran (1–5)', type: 'number', placeholder: 'cth. 4.5', span: 1 },
-        { name: 'Ambience_Score', label: 'Skor Ambience (1–10)', type: 'number', placeholder: 'cth. 8', span: 1 },
-        { name: 'Service_Quality_Score', label: 'Skor Kualitas Pelayanan (1–10)', type: 'number', placeholder: 'cth. 9', span: 1 },
-        { name: 'Chef_Experience_Years', label: 'Pengalaman Chef (tahun)', type: 'number', placeholder: 'cth. 5', span: 1 },
+        { name: 'Ambience_Score', label: 'Skor Ambience (1–10)', type: 'number', placeholder: 'cth. 4.3', span: 1 },
+        { name: 'Service_Quality_Score', label: 'Skor Kualitas Pelayanan (1–10)', type: 'number', placeholder: 'cth. 4.4', span: 1 },
+        { name: 'Chef_Experience_Years', label: 'Pengalaman Chef (tahun)', type: 'number', placeholder: 'cth. 8', span: 1 },
       ]
     },
     {
-      title: 'Keuangan & Marketing', icon: '💰', color: '#C1622F',
+     title: 'Keuangan & Marketing', icon: '💰', color: '#C1622F',
       fields: [
-        { name: 'Average_Meal_Price', label: 'Harga Rata-rata Makanan (Rp)', type: 'number', placeholder: 'cth. 75000', span: 1 },
-        { name: 'Marketing_Budget', label: 'Budget Marketing (Rp)', type: 'number', placeholder: 'cth. 5000000', span: 1 },
-        { name: 'Social_Media_Followers', label: 'Followers Media Sosial', type: 'number', placeholder: 'cth. 10000', span: 2 },
-      ]
+        {
+          name: 'Average_Meal_Price',
+          label: 'Harga Rata-rata Makanan (USD)',
+          type: 'number',
+          placeholder: 'cth. 10',
+          span: 1
+        },
+        {
+          name: 'Marketing_Budget',
+          label: 'Budget Marketing (USD)',
+          type: 'number',
+          placeholder: 'cth. 100',
+          span: 1
+        },
+        {
+          name: 'Social_Media_Followers',
+          label: 'Followers Media Sosial',
+          type: 'number',
+          placeholder: 'cth. 2000',
+          span: 2
+        },
+     ]
     },
     {
       title: 'Ulasan & Reservasi', icon: '💬', color: '#E4A848',
       fields: [
-        { name: 'Number_of_Reviews', label: 'Jumlah Review', type: 'number', placeholder: 'cth. 200', span: 1 },
-        { name: 'Avg_Review_Length', label: 'Rata-rata Panjang Review', type: 'number', placeholder: 'cth. 150', span: 1 },
-        { name: 'Weekend_Reservations', label: 'Reservasi Weekend', type: 'number', placeholder: 'cth. 50', span: 1 },
-        { name: 'Weekday_Reservations', label: 'Reservasi Weekday', type: 'number', placeholder: 'cth. 30', span: 1 },
+        { name: 'Number_of_Reviews', label: 'Jumlah Review', type: 'number', placeholder: 'cth. 350', span: 1 },
+        { name: 'Avg_Review_Length', label: 'Rata-rata Panjang Review', type: 'number', placeholder: 'cth. 120', span: 1 },
+        { name: 'Weekend_Reservations', label: 'Reservasi Weekend', type: 'number', placeholder: 'cth. 60', span: 1 },
+        { name: 'Weekday_Reservations', label: 'Reservasi Weekday', type: 'number', placeholder: 'cth. 35', span: 1 },
       ]
     },
   ]
@@ -89,8 +153,8 @@ function InputPage() {
             Masukkan Data Restoran
           </h1>
           <p style={{ color: '#7A6550', fontSize: '1rem', lineHeight: 1.7 }}>
-            Isi data restoran selengkap mungkin untuk mendapatkan prediksi
-            pendapatan yang akurat dari model Supervised Learning.
+            Isi data restoran untuk mendapatkan prediksi pendapatan tahunan
+            menggunakan model <strong style={{ color: '#1E1208' }}>Gradient Boosting Regressor</strong>.
           </p>
         </div>
       </div>
@@ -146,35 +210,54 @@ function InputPage() {
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '18px' }}>
               {section.fields.map((field) => (
-                <div key={field.name} style={{ gridColumn: field.span === 2 ? 'span 2' : 'span 1' }}>
+                <div key={field.name} style={{
+                  gridColumn: field.span === 2 ? 'span 2' : 'span 1'
+                }}>
                   <label style={{
                     display: 'block', fontSize: '0.8rem', fontWeight: 600,
                     color: '#3A2418', marginBottom: '7px', letterSpacing: '0.02em'
                   }}>
                     {field.label}
                   </label>
-                  <input
-                    type={field.type}
-                    name={field.name}
-                    placeholder={field.placeholder}
-                    value={formData[field.name]}
-                    onChange={handleChange}
-                    style={{
-                      width: '100%', padding: '11px 14px',
-                      borderRadius: '8px', border: '1.5px solid #E8DCCB',
-                      background: '#FBF6EE', fontFamily: 'DM Sans, sans-serif',
-                      fontSize: '0.9rem', color: '#1E1208',
-                      outline: 'none', transition: 'border-color .2s, background .2s'
-                    }}
-                    onFocus={e => {
-                      e.target.style.borderColor = section.color
-                      e.target.style.background = 'white'
-                    }}
-                    onBlur={e => {
-                      e.target.style.borderColor = '#E8DCCB'
-                      e.target.style.background = '#FBF6EE'
-                    }}
-                  />
+                  {field.type === 'select' ? (
+                    <select
+                      name={field.name}
+                      value={formData[field.name]}
+                      onChange={handleChange}
+                      style={inputStyle(section.color)}
+                      onFocus={e => {
+                        e.target.style.borderColor = section.color
+                        e.target.style.background = 'white'
+                      }}
+                      onBlur={e => {
+                        e.target.style.borderColor = '#E8DCCB'
+                        e.target.style.background = '#FBF6EE'
+                      }}
+                    >
+                      {field.options.map(opt => (
+                        <option key={opt} value={opt}>
+                          {opt === '' ? `-- ${field.placeholder} --` : opt}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <input
+                      type={field.type}
+                      name={field.name}
+                      placeholder={field.placeholder}
+                      value={formData[field.name]}
+                      onChange={handleChange}
+                      style={inputStyle(section.color)}
+                      onFocus={e => {
+                        e.target.style.borderColor = section.color
+                        e.target.style.background = 'white'
+                      }}
+                      onBlur={e => {
+                        e.target.style.borderColor = '#E8DCCB'
+                        e.target.style.background = '#FBF6EE'
+                      }}
+                    />
+                  )}
                 </div>
               ))}
             </div>

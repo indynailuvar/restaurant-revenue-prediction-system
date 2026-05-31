@@ -1,0 +1,19 @@
+{
+    "features": {
+        "Location": "Downtown",
+        "Cuisine": "American",
+        "Rating": 0,
+        "Seating Capacity": 0,
+        "Average Meal Price": 0,
+        "Marketing Budget": 0,
+        "Social Media Followers": 0,
+        "Chef Experience Years": 0,
+        "Number of Reviews": 0,
+        "Avg Review Length": 0,
+        "Ambience Score": 0,
+        "Service Quality Score": 0,
+        "Parking Availability": "No",
+        "Weekend Reservations": 0,
+        "Weekday Reservations": 0
+    }
+}

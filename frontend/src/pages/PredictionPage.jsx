@@ -30,7 +30,29 @@ function PredictionPage() {
       setResult(response.data)
     } catch {
       setError('Backend belum tersambung. Menampilkan data simulasi.')
-      setResult({ predicted_revenue: 125750000 })
+      setResult({
+        predicted_revenue: 638945.52,
+        predicted_revenue_usd: 638945.52,
+        predicted_revenue_idr: 10223128320,
+        currency: 'USD',
+        converted_currency: 'IDR',
+        usd_to_idr_rate: 16000,
+        model_status: 'loaded',
+        model_name: 'restaurant_gb_revenue1',
+        model_version: '1',
+        model_alias: 'champion',
+        input_status: 'valid',
+        prediction_reliability: 'normal',
+        prediction_note: 'Input berada dalam kategori dan rentang data training yang diketahui. Hasil prediksi dapat digunakan sebagai estimasi awal.',
+        supporting_factors: ['Rating restoran relatif tinggi.', 'Jumlah pengikut media sosial relatif besar.'],
+        recommendation: 'Hasil prediksi dapat digunakan sebagai estimasi awal Revenue restoran berdasarkan fitur operasional.',
+        validation_warnings: [],
+        out_of_range_features: [],
+        unknown_categories: [],
+        is_prediction_adjusted: false,
+        currency_note: 'Prediksi Revenue utama ditampilkan dalam USD sesuai satuan target pada dataset training.',
+        exchange_rate_note: 'Konversi IDR menggunakan rate konfigurasi sistem, bukan kurs real-time.',
+      })
     } finally {
       setLoading(false)
     }
@@ -44,11 +66,23 @@ function PredictionPage() {
 
   const radarData = inputData ? [
     { subject: 'Rating', value: parseFloat(inputData.Rating) || 0, fullMark: 5 },
-    { subject: 'Ambience', value: parseFloat(inputData.Ambience_Score) || 0, fullMark: 10 },
-    { subject: 'Pelayanan', value: parseFloat(inputData.Service_Quality_Score) || 0, fullMark: 10 },
-    { subject: 'Chef', value: parseFloat(inputData.Chef_Experience_Years) || 0, fullMark: 20 },
-    { subject: 'Review', value: Math.min(parseFloat(inputData.Number_of_Reviews) / 50 || 0, 10), fullMark: 10 },
+    { subject: 'Ambience', value: parseFloat(inputData.Ambience_Score) || 0, fullMark: 5 },
+    { subject: 'Pelayanan', value: parseFloat(inputData.Service_Quality_Score) || 0, fullMark: 5 },
+    { subject: 'Chef', value: Math.min(parseFloat(inputData.Chef_Experience_Years) || 0, 5), fullMark: 5 },
+    { subject: 'Review', value: Math.min(parseFloat(inputData.Number_of_Reviews) / 100 || 0, 5), fullMark: 5 },
   ] : []
+
+  const getReliabilityColor = (reliability) => {
+    if (reliability === 'normal') return '#8BAF8A'
+    if (reliability === 'low') return '#E4A848'
+    return '#C1622F'
+  }
+
+  const getReliabilityLabel = (reliability) => {
+    if (reliability === 'normal') return '✅ Normal'
+    if (reliability === 'low') return '⚠️ Perlu Perhatian'
+    return '❌ Rendah'
+  }
 
   if (loading) return (
     <div style={{
@@ -74,7 +108,7 @@ function PredictionPage() {
           Memproses Prediksi...
         </p>
         <p style={{ color: '#7A6550', fontSize: '0.9rem' }}>
-          Model sedang menganalisis data restoran Anda
+          Model Gradient Boosting sedang menganalisis data restoran Anda
         </p>
       </div>
     </div>
@@ -109,7 +143,7 @@ function PredictionPage() {
             Output Analisis Model ML
           </h1>
           <p style={{ color: '#7A6550', fontSize: '1rem', lineHeight: 1.7 }}>
-            Hasil prediksi pendapatan restoran berdasarkan Supervised Learning Berbasis Regresi.
+            Hasil prediksi pendapatan tahunan restoran menggunakan Gradient Boosting Regressor.
           </p>
           {error && (
             <div style={{
@@ -127,71 +161,153 @@ function PredictionPage() {
 
       <div style={{ maxWidth: '900px', margin: '0 auto', padding: '40px 48px' }}>
 
-        {/* Revenue Card */}
+        {/* Revenue Cards */}
         <div style={{
-          background: '#1E1208', borderRadius: '20px',
-          padding: '48px', marginBottom: '24px',
-          textAlign: 'center', position: 'relative', overflow: 'hidden',
-          boxShadow: '0 20px 60px rgba(30,18,8,0.20)'
+          display: 'grid', gridTemplateColumns: '1fr 1fr',
+          gap: '16px', marginBottom: '24px'
         }}>
+          {/* USD Card */}
           <div style={{
-            position: 'absolute', right: '-80px', top: '-80px',
-            width: '300px', height: '300px', borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(193,98,47,0.20) 0%, transparent 70%)',
-            pointerEvents: 'none'
-          }} />
-          <div style={{
-            position: 'absolute', left: '-60px', bottom: '-60px',
-            width: '250px', height: '250px', borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(228,168,72,0.12) 0%, transparent 70%)',
-            pointerEvents: 'none'
-          }} />
-          <div style={{
-            fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.12em',
-            textTransform: 'uppercase', color: '#7A6050',
-            marginBottom: '16px', position: 'relative', zIndex: 1
+            background: '#1E1208', borderRadius: '20px',
+            padding: '32px', textAlign: 'center',
+            position: 'relative', overflow: 'hidden',
+            boxShadow: '0 20px 60px rgba(30,18,8,0.20)'
           }}>
-            Estimasi Pendapatan Bulanan
+            <div style={{
+              position: 'absolute', right: '-40px', top: '-40px',
+              width: '160px', height: '160px', borderRadius: '50%',
+              background: 'radial-gradient(circle, rgba(193,98,47,0.20) 0%, transparent 70%)',
+              pointerEvents: 'none'
+            }} />
+            <div style={{
+              fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.12em',
+              textTransform: 'uppercase', color: '#7A6050',
+              marginBottom: '10px', position: 'relative', zIndex: 1
+            }}>
+              Pendapatan Tahunan (USD)
+            </div>
+            <div style={{
+              fontFamily: "'Playfair Display', serif",
+              fontSize: 'clamp(1.6rem, 3vw, 2.4rem)',
+              fontWeight: 900, color: '#E4A848',
+              marginBottom: '8px', letterSpacing: '-1px',
+              position: 'relative', zIndex: 1
+            }}>
+              $ {result?.predicted_revenue_usd?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0'}
+            </div>
+            <div style={{
+              color: '#5A3E30', fontSize: '0.78rem',
+              position: 'relative', zIndex: 1
+            }}>
+              {result?.currency || 'USD'} · per tahun
+            </div>
           </div>
+
+          {/* IDR Card */}
           <div style={{
-            fontFamily: "'Playfair Display', serif",
-            fontSize: 'clamp(2.5rem, 5vw, 3.8rem)',
-            fontWeight: 900, color: '#E4A848',
-            marginBottom: '12px', letterSpacing: '-1px',
-            position: 'relative', zIndex: 1
+            background: '#C1622F', borderRadius: '20px',
+            padding: '32px', textAlign: 'center',
+            position: 'relative', overflow: 'hidden',
+            boxShadow: '0 20px 60px rgba(193,98,47,0.20)'
           }}>
-            Rp {result?.predicted_revenue?.toLocaleString('id-ID') || '0'}
-          </div>
-          <div style={{
-            color: '#5A3E30', fontSize: '0.9rem',
-            marginBottom: '32px', position: 'relative', zIndex: 1
-          }}>
-            per bulan · Supervised Learning Model
-          </div>
-          <div style={{
-            display: 'flex', justifyContent: 'center', gap: '40px',
-            paddingTop: '28px', borderTop: '1px solid rgba(255,255,255,0.06)',
-            position: 'relative', zIndex: 1
-          }}>
-            {[
-              { label: 'Metode', val: 'Supervised Learning' },
-              { label: 'Status', val: '✅ Berhasil' },
-              { label: 'Akurasi', val: '~84%' },
-            ].map(s => (
-              <div key={s.label} style={{ textAlign: 'center' }}>
-                <div style={{
-                  fontFamily: "'Playfair Display', serif",
-                  fontSize: '0.95rem', fontWeight: 700,
-                  color: 'white', marginBottom: '4px'
-                }}>{s.val}</div>
-                <div style={{ fontSize: '0.7rem', color: '#5A3E30' }}>{s.label}</div>
-              </div>
-            ))}
+            <div style={{
+              position: 'absolute', right: '-40px', top: '-40px',
+              width: '160px', height: '160px', borderRadius: '50%',
+              background: 'rgba(255,255,255,0.08)',
+              pointerEvents: 'none'
+            }} />
+            <div style={{
+              fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.12em',
+              textTransform: 'uppercase', color: 'rgba(255,255,255,0.65)',
+              marginBottom: '10px', position: 'relative', zIndex: 1
+            }}>
+              Pendapatan Tahunan (IDR)
+            </div>
+            <div style={{
+              fontFamily: "'Playfair Display', serif",
+              fontSize: 'clamp(1.4rem, 2.5vw, 2rem)',
+              fontWeight: 900, color: 'white',
+              marginBottom: '8px', letterSpacing: '-0.5px',
+              position: 'relative', zIndex: 1
+            }}>
+              Rp {result?.predicted_revenue_idr?.toLocaleString('id-ID') || '0'}
+            </div>
+            <div style={{
+              color: 'rgba(255,255,255,0.65)', fontSize: '0.78rem',
+              position: 'relative', zIndex: 1
+            }}>
+              Kurs 1 USD = Rp {result?.usd_to_idr_rate?.toLocaleString('id-ID') || '16.000'}
+            </div>
           </div>
         </div>
 
+        {/* Model Info */}
+        <div style={{
+          background: 'white', borderRadius: '16px', padding: '24px',
+          border: '1px solid #E8DCCB',
+          boxShadow: '0 4px 16px rgba(30,18,8,0.04)',
+          marginBottom: '20px',
+          display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px'
+        }}>
+          {[
+            { label: 'Model', val: result?.model_name || '-' },
+            { label: 'Versi', val: `v${result?.model_version || '1'}` },
+            { label: 'Alias', val: `@${result?.model_alias || 'champion'}` },
+            { label: 'Reliabilitas', val: getReliabilityLabel(result?.prediction_reliability), color: getReliabilityColor(result?.prediction_reliability) },
+          ].map(s => (
+            <div key={s.label} style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '0.7rem', color: '#7A6550', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                {s.label}
+              </div>
+              <div style={{
+                fontWeight: 700, color: s.color || '#1E1208',
+                fontSize: '0.82rem', fontFamily: 'DM Mono, monospace'
+              }}>
+                {s.val}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Currency Note */}
+        <div style={{
+          background: 'rgba(228,168,72,0.08)',
+          border: '1px solid rgba(228,168,72,0.25)',
+          borderRadius: '10px', padding: '12px 16px',
+          marginBottom: '20px', fontSize: '0.82rem', color: '#7A5808',
+          display: 'flex', alignItems: 'flex-start', gap: '8px'
+        }}>
+          <span>💱</span>
+          <div>
+            <div style={{ fontWeight: 600, marginBottom: '2px' }}>{result?.currency_note}</div>
+            <div style={{ color: '#A0876A', fontSize: '0.78rem' }}>{result?.exchange_rate_note}</div>
+          </div>
+        </div>
+
+        {/* Validation Warnings */}
+        {result?.validation_warnings?.length > 0 && (
+          <div style={{
+            background: 'rgba(193,98,47,0.08)',
+            border: '1px solid rgba(193,98,47,0.25)',
+            borderRadius: '10px', padding: '16px',
+            marginBottom: '20px'
+          }}>
+            <div style={{ fontWeight: 700, color: '#C1622F', marginBottom: '8px', fontSize: '0.88rem' }}>
+              ⚠️ Peringatan Validasi
+            </div>
+            {result.validation_warnings.map((w, i) => (
+              <div key={i} style={{ fontSize: '0.82rem', color: '#7A6550', marginBottom: '4px' }}>
+                • {w}
+              </div>
+            ))}
+          </div>
+        )}
+
         {/* Charts */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
+        <div style={{
+          display: 'grid', gridTemplateColumns: '1fr 1fr',
+          gap: '20px', marginBottom: '20px'
+        }}>
           <div style={{
             background: 'white', borderRadius: '16px', padding: '28px',
             border: '1px solid #E8DCCB', boxShadow: '0 4px 16px rgba(30,18,8,0.04)'
@@ -233,41 +349,103 @@ function PredictionPage() {
           </div>
         </div>
 
-        {/* Feature Importance */}
-        <div style={{
-          background: 'white', borderRadius: '16px', padding: '28px',
-          border: '1px solid #E8DCCB', boxShadow: '0 4px 16px rgba(30,18,8,0.04)',
-          marginBottom: '20px'
-        }}>
-          <div style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#C1622F', marginBottom: '4px' }}>
-            Analisis Faktor
-          </div>
-          <div style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.1rem', fontWeight: 700, color: '#1E1208', marginBottom: '24px' }}>
-            Faktor Paling Berpengaruh
-          </div>
-          {[
-            { name: 'Marketing Budget', val: 0.32, color: '#C1622F' },
-            { name: 'Rating Restoran', val: 0.24, color: '#E4A848' },
-            { name: 'Social Media Followers', val: 0.19, color: '#D4886A' },
-            { name: 'Pengalaman Chef', val: 0.13, color: '#A0876A' },
-          ].map(item => (
-            <div key={item.name} style={{ marginBottom: '16px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
-                <span style={{ fontSize: '0.84rem', fontWeight: 500, color: '#1E1208' }}>{item.name}</span>
-                <span style={{ fontSize: '0.78rem', fontFamily: 'DM Mono, monospace', color: '#7A6550' }}>{item.val}</span>
-              </div>
-              <div style={{ height: '6px', background: '#F0E8DA', borderRadius: '3px' }}>
-                <div style={{ height: '6px', width: `${(item.val / 0.32) * 100}%`, background: item.color, borderRadius: '3px', transition: 'width 1s ease' }} />
-              </div>
+        {/* Supporting Factors */}
+        {result?.supporting_factors?.length > 0 && (
+          <div style={{
+            background: 'white', borderRadius: '16px', padding: '28px',
+            border: '1px solid #E8DCCB',
+            boxShadow: '0 4px 16px rgba(30,18,8,0.04)',
+            marginBottom: '20px'
+          }}>
+            <div style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#C1622F', marginBottom: '4px' }}>
+              Faktor Pendukung
             </div>
-          ))}
-        </div>
+            <div style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.1rem', fontWeight: 700, color: '#1E1208', marginBottom: '20px' }}>
+              Mengapa Pendapatan Ini?
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              {result.supporting_factors.map((factor, i) => (
+                <div key={i} style={{
+                  display: 'flex', alignItems: 'flex-start', gap: '12px',
+                  padding: '12px 16px', borderRadius: '10px',
+                  background: '#FBF6EE', border: '1px solid #E8DCCB'
+                }}>
+                  <div style={{
+                    width: '24px', height: '24px', borderRadius: '50%',
+                    background: 'rgba(193,98,47,0.12)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    flexShrink: 0, fontSize: '0.72rem', fontWeight: 700, color: '#C1622F'
+                  }}>
+                    {i + 1}
+                  </div>
+                  <span style={{ fontSize: '0.88rem', color: '#1E1208', lineHeight: 1.6 }}>{factor}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Recommendation */}
+        {result?.recommendation && (
+          <div style={{
+            background: 'white', borderRadius: '16px', padding: '28px',
+            border: '1px solid #E8DCCB',
+            boxShadow: '0 4px 16px rgba(30,18,8,0.04)',
+            marginBottom: '20px'
+          }}>
+            <div style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#C1622F', marginBottom: '4px' }}>
+              Rekomendasi
+            </div>
+            <div style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.1rem', fontWeight: 700, color: '#1E1208', marginBottom: '14px' }}>
+              Catatan dari Model
+            </div>
+            <div style={{
+              padding: '16px', borderRadius: '10px',
+              background: '#FBF6EE', border: '1px solid #E8DCCB',
+              fontSize: '0.88rem', color: '#7A6550', lineHeight: 1.7
+            }}>
+              💡 {result.recommendation}
+            </div>
+            <div style={{
+              marginTop: '12px', padding: '12px 16px',
+              borderRadius: '10px', background: 'rgba(139,175,138,0.10)',
+              border: '1px solid rgba(139,175,138,0.25)',
+              fontSize: '0.82rem', color: '#3A6A38', lineHeight: 1.6
+            }}>
+              📋 {result.prediction_note}
+            </div>
+          </div>
+        )}
+
+        {/* Out of Range Warning */}
+        {result?.out_of_range_features?.length > 0 && (
+          <div style={{
+            background: 'rgba(228,168,72,0.08)',
+            border: '1px solid rgba(228,168,72,0.25)',
+            borderRadius: '10px', padding: '16px',
+            marginBottom: '20px'
+          }}>
+            <div style={{ fontWeight: 700, color: '#B8900A', marginBottom: '10px', fontSize: '0.88rem' }}>
+              📊 Nilai Di Luar Rentang Training
+            </div>
+            {result.out_of_range_features.map((item, i) => (
+              <div key={i} style={{
+                fontSize: '0.82rem', color: '#7A6550',
+                marginBottom: '6px', padding: '8px 12px',
+                background: 'white', borderRadius: '8px'
+              }}>
+                <strong style={{ color: '#1E1208' }}>{item.feature}</strong>: {item.input_value} (rentang training: {item.training_min} – {item.training_max})
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* Input Summary */}
         {inputData && (
           <div style={{
             background: 'white', borderRadius: '16px', padding: '28px',
-            border: '1px solid #E8DCCB', boxShadow: '0 4px 16px rgba(30,18,8,0.04)',
+            border: '1px solid #E8DCCB',
+            boxShadow: '0 4px 16px rgba(30,18,8,0.04)',
             marginBottom: '20px'
           }}>
             <div style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#C1622F', marginBottom: '4px' }}>
@@ -306,6 +484,19 @@ function PredictionPage() {
           >
             🔄 Input Ulang
           </button>
+          <Link to="/insight" style={{
+            flex: 1, padding: '14px', borderRadius: '10px',
+            border: 'none', background: '#E4A848', color: 'white',
+            fontFamily: 'DM Sans, sans-serif', fontSize: '0.95rem', fontWeight: 600,
+            cursor: 'pointer', textDecoration: 'none',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+            transition: 'background .2s'
+          }}
+            onMouseOver={e => e.currentTarget.style.background = '#B8900A'}
+            onMouseOut={e => e.currentTarget.style.background = '#E4A848'}
+          >
+            💡 Lihat Insight
+          </Link>
           <Link to="/about" style={{
             flex: 1, padding: '14px', borderRadius: '10px',
             border: 'none', background: '#1E1208', color: 'white',
@@ -317,7 +508,7 @@ function PredictionPage() {
             onMouseOver={e => e.currentTarget.style.background = '#C1622F'}
             onMouseOut={e => e.currentTarget.style.background = '#1E1208'}
           >
-            ℹ️ Tentang Sistem
+            ℹ️ Tentang
           </Link>
         </div>
 

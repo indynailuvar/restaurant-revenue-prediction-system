@@ -1,0 +1,35 @@
+=== Inspect Trained Artifacts ===
+
+model: models\trained\best_model.pkl
+  Type: <class 'sklearn.linear_model._ridge.Ridge'>
+
+scaler: models\trained\scaler.pkl
+  Type: <class 'sklearn.preprocessing._data.StandardScaler'>
+
+feature_names: models\trained\feature_names.pkl
+  Type: <class 'list'>
+  Total features: 15
+  Sample features:
+    - Location
+    - Cuisine
+    - Rating
+    - Seating Capacity
+    - Average Meal Price
+    - Marketing Budget
+    - Social Media Followers
+    - Chef Experience Years
+    - Number of Reviews
+    - Avg Review Length
+    - Ambience Score
+    - Service Quality Score
+    - Parking Availability
+    - Weekend Reservations
+    - Weekday Reservations
+
+encoders: models\trained\encoders.pkl
+  Type: <class 'dict'>
+  Total encoders: 3
+  Encoder columns:
+    - Location: <class 'sklearn.preprocessing._label.LabelEncoder'>
+    - Cuisine: <class 'sklearn.preprocessing._label.LabelEncoder'>
+    - Parking Availability: <class 'sklearn.preprocessing._label.LabelEncoder'>

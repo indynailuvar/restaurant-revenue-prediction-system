@@ -1,0 +1,58 @@
+services:
+
+  db:
+    image: postgres:15-alpine
+    container_name: dicto-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: restaurant
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "1234"
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d restaurant"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+
+    container_name: dicto-backend
+    restart: unless-stopped
+
+    ports:
+      - "8000:8000"
+
+    volumes:
+      - ./models/trained:/app/models/trained
+
+    environment:
+      - USD_TO_IDR_RATE=16000
+      - DATABASE_URL=postgresql://postgres:1234@db:5432/restaurant
+
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build: ./frontend
+    container_name: dicto-frontend
+    restart: unless-stopped
+
+    ports:
+      - "5173:5173"
+
+    environment:
+      - VITE_API_URL=http://localhost:8000
+
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
