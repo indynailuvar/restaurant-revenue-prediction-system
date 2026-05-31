@@ -21,8 +21,8 @@ def load_and_preprocess(
     # Fix kolom Avg Review Length (object → numeric) 
     if 'Avg Review Length' in df.columns:
         df['Avg Review Length'] = df['Avg Review Length'].astype(str)
-        df['Avg Review Length'] = df['Avg Review Length'].str.replace(',', '.', regex=False)
-        df['Avg Review Length'] = pd.to_numeric(df['Avg Review Length'], errors='coerce')
+        df['Avg Review Length'] = df['Avg Review Length'].astype(str).str.replace('.', '', regex=False)
+        df['Avg Review Length'] = pd.to_numeric(df['Avg Review Length'], errors='coerce') / 1e15
     
     # Cek berapa yang null setelah convert
         null_count = df['Avg Review Length'].isna().sum()

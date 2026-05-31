@@ -46,7 +46,7 @@ if hasattr(model, 'feature_importances_'):
     os.makedirs('reports/figures', exist_ok=True)
     plt.savefig('reports/figures/feature_importance.png', dpi=150)
     plt.show()
-    print("\n✅ Grafik tersimpan: reports/figures/feature_importance.png")
+    print("\n Grafik tersimpan: reports/figures/feature_importance.png")
 
 elif hasattr(model, 'coef_'):
     # Untuk Ridge Regression
