@@ -179,7 +179,7 @@ function InsightPage() {
           <span style={{ color: '#D4886A' }}>Rekomendasi</span>
         </h1>
         <p style={{
-          color: '#5A3E30', fontSize: '0.95rem', lineHeight: 1.7,
+          color: '#ada49f', fontSize: '0.95rem', lineHeight: 1.7,
           maxWidth: '560px', margin: '0 auto 28px',
           position: 'relative', zIndex: 1
         }}>
@@ -422,7 +422,7 @@ function InsightPage() {
                   <div style={{ fontWeight: 600, color: 'white', fontSize: '0.88rem', marginBottom: '4px' }}>
                     {item.title}
                   </div>
-                  <div style={{ fontSize: '0.78rem', color: '#5A3E30', lineHeight: 1.6 }}>
+                  <div style={{ fontSize: '0.78rem', color: '#cecece', lineHeight: 1.6 }}>
                     {item.desc}
                   </div>
                 </div>
