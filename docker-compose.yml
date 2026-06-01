@@ -1,5 +1,4 @@
 services:
-
   db:
     image: postgres:15-alpine
     container_name: dicto-db
@@ -19,51 +18,18 @@ services:
       retries: 5
 
   backend:
-<<<<<<< HEAD
-<<<<<<< HEAD
-    build: ./backend
-=======
-    build:
-      context: .
-      dockerfile: backend/Dockerfile
-
->>>>>>> 1d4c5b733caf4626ab720af5373d6e1c22a50b73
-    container_name: dicto-backend
-    restart: unless-stopped
-
-    ports:
-      - "8000:8000"
-
-    volumes:
-      - ./models/trained:/app/models/trained
-
-    environment:
-      - USD_TO_IDR_RATE=16000
-<<<<<<< HEAD
-      - DATABASE_URL=postgresql://postgres:1234@db:5434/restaurant
-=======
     build:
       context: ./backend
       dockerfile: Dockerfile
-
     container_name: dicto-backend
     restart: unless-stopped
-
     ports:
       - "8000:8000"
-
     volumes:
       - ./models/trained:/app/models/trained
-
     environment:
       - USD_TO_IDR_RATE=16000
       - DATABASE_URL=postgresql://postgres:1234@db:5432/restaurant
-
->>>>>>> 5df17a124f9643e06b8e4c8d1cca73ed647f5afc
-=======
-      - DATABASE_URL=postgresql://postgres:1234@db:5432/restaurant
-
->>>>>>> 1d4c5b733caf4626ab720af5373d6e1c22a50b73
     depends_on:
       db:
         condition: service_healthy
@@ -72,38 +38,16 @@ services:
     build: ./frontend
     container_name: dicto-frontend
     restart: unless-stopped
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
->>>>>>> 1d4c5b733caf4626ab720af5373d6e1c22a50b73
     ports:
-      - "5175:5173"
-
+      - "5173:5173"
     environment:
       - VITE_API_URL=http://localhost:8000
-
     depends_on:
       - backend
 
-<<<<<<< HEAD
 networks:
   default:
     name: dicto-network
 
-=======
-
-    ports:
-      - "5173:5173"
-
-    environment:
-      - VITE_API_URL=http://localhost:8000
-
-    depends_on:
-      - backend
-
->>>>>>> 5df17a124f9643e06b8e4c8d1cca73ed647f5afc
-=======
->>>>>>> 1d4c5b733caf4626ab720af5373d6e1c22a50b73
 volumes:
   postgres_data:
