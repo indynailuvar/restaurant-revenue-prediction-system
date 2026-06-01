@@ -273,7 +273,7 @@ function RevenueCard() {
             >
               📈
             </motion.span>
-            Naik dari bulan lalu
+            Naik dari tahun lalu
           </motion.div>
         </motion.div>
 
