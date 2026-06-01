@@ -84,7 +84,7 @@ function InputPage() {
         { name: 'Rating', label: 'Rating Restoran (3–5)', type: 'number', placeholder: 'cth. 4.5', span: 1 },
         { name: 'Ambience_Score', label: 'Skor Ambience (1–10)', type: 'number', placeholder: 'cth. 4.3', span: 1 },
         { name: 'Service_Quality_Score', label: 'Skor Kualitas Pelayanan (1–10)', type: 'number', placeholder: 'cth. 4.4', span: 1 },
-        { name: 'Chef_Experience_Years', label: 'Pengalaman Chef (tahun) 1-19', type: 'number', placeholder: 'cth. 8', span: 1 },
+        { name: 'Chef_Experience_Years', label: 'Pengalaman Chef (1-19 tahun) ', type: 'number', placeholder: 'cth. 8', span: 1 },
       ]
     },
     {
@@ -92,14 +92,14 @@ function InputPage() {
       fields: [
         {
           name: 'Average_Meal_Price',
-          label: 'Harga Rata-rata Makanan (USD) 25-76',
+          label: 'Harga Rata-rata Makanan (25-76 USD) ',
           type: 'number',
           placeholder: 'cth. 27',
           span: 1
         },
         {
           name: 'Marketing_Budget',
-          label: 'Budget Marketing (USD) 604-9978',
+          label: 'Budget Marketing (604-9978 USD) ',
           type: 'number',
           placeholder: 'cth. 100',
           span: 1
