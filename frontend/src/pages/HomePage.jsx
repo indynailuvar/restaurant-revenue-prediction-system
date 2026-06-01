@@ -864,7 +864,7 @@ function HomePage() {
         {[
           { title: 'Sistem', links: ['Beranda', 'Prediksi', 'Hasil', 'Tentang'] },
           { title: 'Model', links: ['Supervised Learning', 'MLflow', 'FastAPI', 'Dataset'] },
-          { title: 'Tim', links: ['Laudita', 'Indy', 'Vika', 'GitHub'] },
+          { title: 'Tim', links: ['Laudita', 'Indy', 'Vika'] },
         ].map((col) => (
           <div key={col.title}>
             <h4 style={{
