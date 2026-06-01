@@ -26,7 +26,22 @@ function InputPage() {
   }
 
   const handleSubmit = () => {
-    localStorage.setItem('predictionInput', JSON.stringify(formData))
+    const processedData = {
+      ...formData,
+      Rating: parseFloat(formData.Rating),
+      Seating_Capacity: parseInt(formData.Seating_Capacity),
+      Average_Meal_Price: parseFloat(formData.Average_Meal_Price),
+      Marketing_Budget: parseFloat(formData.Marketing_Budget),
+      Social_Media_Followers: parseInt(formData.Social_Media_Followers),
+      Chef_Experience_Years: parseInt(formData.Chef_Experience_Years),
+      Number_of_Reviews: parseInt(formData.Number_of_Reviews),
+      Avg_Review_Length: parseFloat(formData.Avg_Review_Length),
+      Ambience_Score: parseFloat(formData.Ambience_Score),
+      Service_Quality_Score: parseFloat(formData.Service_Quality_Score),
+      Weekend_Reservations: parseInt(formData.Weekend_Reservations),
+      Weekday_Reservations: parseInt(formData.Weekday_Reservations),
+    }
+    localStorage.setItem('predictionInput', JSON.stringify(processedData))
     navigate('/prediction')
   }
 
@@ -53,7 +68,7 @@ function InputPage() {
           placeholder: 'cth. Japanese', span: 1
         },
         {
-          name: 'Seating_Capacity', label: 'Kapasitas Tempat Duduk', type: 'number',
+          name: 'Seating_Capacity', label: 'Kapasitas Tempat Duduk (30-90)', type: 'number',
           placeholder: 'cth. 80', span: 1
         },
         {
@@ -66,10 +81,10 @@ function InputPage() {
     {
       title: 'Kualitas & Penilaian', icon: '⭐', color: '#E4A848',
       fields: [
-        { name: 'Rating', label: 'Rating Restoran (1–5)', type: 'number', placeholder: 'cth. 4.5', span: 1 },
+        { name: 'Rating', label: 'Rating Restoran (3–5)', type: 'number', placeholder: 'cth. 4.5', span: 1 },
         { name: 'Ambience_Score', label: 'Skor Ambience (1–10)', type: 'number', placeholder: 'cth. 4.3', span: 1 },
         { name: 'Service_Quality_Score', label: 'Skor Kualitas Pelayanan (1–10)', type: 'number', placeholder: 'cth. 4.4', span: 1 },
-        { name: 'Chef_Experience_Years', label: 'Pengalaman Chef (tahun)', type: 'number', placeholder: 'cth. 8', span: 1 },
+        { name: 'Chef_Experience_Years', label: 'Pengalaman Chef (tahun) 1-19', type: 'number', placeholder: 'cth. 8', span: 1 },
       ]
     },
     {
@@ -77,21 +92,21 @@ function InputPage() {
       fields: [
         {
           name: 'Average_Meal_Price',
-          label: 'Harga Rata-rata Makanan (USD)',
+          label: 'Harga Rata-rata Makanan (USD) 25-76',
           type: 'number',
-          placeholder: 'cth. 10',
+          placeholder: 'cth. 27',
           span: 1
         },
         {
           name: 'Marketing_Budget',
-          label: 'Budget Marketing (USD)',
+          label: 'Budget Marketing (USD) 604-9978',
           type: 'number',
           placeholder: 'cth. 100',
           span: 1
         },
         {
           name: 'Social_Media_Followers',
-          label: 'Followers Media Sosial',
+          label: 'Followers Media Sosial (5277-103777)',
           type: 'number',
           placeholder: 'cth. 2000',
           span: 2
@@ -101,10 +116,10 @@ function InputPage() {
     {
       title: 'Ulasan & Reservasi', icon: '💬', color: '#E4A848',
       fields: [
-        { name: 'Number_of_Reviews', label: 'Jumlah Review', type: 'number', placeholder: 'cth. 350', span: 1 },
-        { name: 'Avg_Review_Length', label: 'Rata-rata Panjang Review', type: 'number', placeholder: 'cth. 120', span: 1 },
-        { name: 'Weekend_Reservations', label: 'Reservasi Weekend', type: 'number', placeholder: 'cth. 60', span: 1 },
-        { name: 'Weekday_Reservations', label: 'Reservasi Weekday', type: 'number', placeholder: 'cth. 35', span: 1 },
+        { name: 'Number_of_Reviews', label: 'Jumlah Review (50-999)', type: 'number', placeholder: 'cth. 350', span: 1 },
+        { name: 'Avg_Review_Length', label: 'Rata-rata Panjang Review (1-999)', type: 'number', placeholder: 'cth. 120', span: 1 },
+        { name: 'Weekend_Reservations', label: 'Reservasi Weekend (0-88)', type: 'number', placeholder: 'cth. 60', span: 1 },
+        { name: 'Weekday_Reservations', label: 'Reservasi Weekday (0-88)', type: 'number', placeholder: 'cth. 35', span: 1 },
       ]
     },
   ]
