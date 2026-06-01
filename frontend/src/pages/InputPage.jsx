@@ -64,7 +64,8 @@ function InputPage() {
           placeholder: 'Pilih lokasi', span: 1
         },
         {
-          name: 'Cuisine', label: 'Jenis Masakan', type: 'text',
+          name: 'Cuisine', label: 'Jenis Masakan', type: 'select',
+          options: ['', 'Japanese', 'Mexican', 'Italian', 'French', 'American', 'Indian'],
           placeholder: 'cth. Japanese', span: 1
         },
         {
