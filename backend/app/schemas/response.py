@@ -4,6 +4,7 @@ from pydantic import BaseModel
 
 
 class RevenuePredictionResponse(BaseModel):
+    prediction_history_id: int | None = None
     # Backward compatibility untuk frontend lama.
     # Nilainya sama dengan predicted_revenue_usd.
     predicted_revenue: float
