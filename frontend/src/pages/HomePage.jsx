@@ -162,7 +162,7 @@ function RevenueCard() {
             border: '1px solid #E8DCCB', zIndex: 2,
           }}
         >
-          🍽️ Restoran Nusantara
+          🍽️ Restoran 
         </motion.div>
 
         {/* Card header */}
