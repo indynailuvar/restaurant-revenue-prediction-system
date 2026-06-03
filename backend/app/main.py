@@ -4,6 +4,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.routes.health import router as health_router
 from app.api.routes.model_info import router as model_info_router
 from app.api.routes.predict import router as predict_router
+from app.api.routes.history import router as history_router
+from app.database import Base, engine
+from app.models.prediction_history import PredictionHistory
 
 
 app = FastAPI(
@@ -11,16 +14,12 @@ app = FastAPI(
     version="1.0.0",
 )
 
+Base.metadata.create_all(bind=engine)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-        "https://restaurant-revenue-prediction-system-aon3n1b5g.vercel.app",
-        "https://restaurant-revenue-prediction-system-cu2qjqxyg.vercel.app",
-    ],
-    allow_origin_regex=r"https://restaurant-revenue-prediction-system-.*\.vercel\.app",
-    allow_credentials=True,
+    allow_origins=["*"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -28,3 +27,4 @@ app.add_middleware(
 app.include_router(health_router)
 app.include_router(model_info_router)
 app.include_router(predict_router)
+app.include_router(history_router)
