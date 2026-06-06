@@ -19,12 +19,14 @@ services:
 
   backend:
     build:
-      context: .
-      dockerfile: backend/Dockerfile
+      context: ./backend
+      dockerfile: Dockerfile
     container_name: dicto-backend
     restart: unless-stopped
     ports:
       - "8000:8000"
+    volumes:
+      - ./models/trained:/app/models/trained
     environment:
       - USD_TO_IDR_RATE=16000
       - DATABASE_URL=postgresql://postgres:1234@db:5432/restaurant
@@ -42,6 +44,10 @@ services:
       - VITE_API_URL=http://localhost:8000
     depends_on:
       - backend
+
+networks:
+  default:
+    name: dicto-network
 
 volumes:
   postgres_data:
