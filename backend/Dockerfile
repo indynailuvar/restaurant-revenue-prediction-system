@@ -1,31 +1,24 @@
-FROM python:3.11-slim
+FROM python:3.12-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-# system deps (untuk numpy, sklearn, cryptography, dll)
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
-    gcc \
-    g++ \
-    python3-dev \
-    pkg-config \
-    libssl-dev \
-    libffi-dev \
-    curl \
+    libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# copy backend requirements saja
-COPY requirements.txt .
-RUN pip install -r requirements.txt
+COPY backend/requirements.txt /app/backend/requirements.txt
 
-RUN pip install --upgrade pip setuptools wheel
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r /app/backend/requirements.txt
 
-RUN pip install --no-cache-dir -r requirements.txt
+COPY backend /app/backend
 
-COPY . .
-
-RUN mkdir -p /app/models/trained
+WORKDIR /app/backend
 
 EXPOSE 8000
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
