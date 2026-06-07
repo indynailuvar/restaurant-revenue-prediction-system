@@ -1,12 +1,10 @@
 from datetime import datetime
 from typing import Any
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel
 
 
 class PredictionHistoryResponse(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
-
     id: int
     input_payload: dict[str, Any]
 
@@ -29,3 +27,6 @@ class PredictionHistoryResponse(BaseModel):
     model_alias: str | None = None
 
     created_at: datetime
+
+    class Config:
+        orm_mode = True

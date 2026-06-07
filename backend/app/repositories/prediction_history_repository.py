@@ -12,21 +12,16 @@ def create_prediction_history(
 ) -> PredictionHistory:
     history = PredictionHistory(
         input_payload=input_payload,
-
-        predicted_revenue_usd=prediction_result.get("predicted_revenue_usd", 0),
-        predicted_revenue_idr=prediction_result.get("predicted_revenue_idr", 0),
-
-        currency=prediction_result.get("currency", "USD"),
-        converted_currency=prediction_result.get("converted_currency", "IDR"),
-        usd_to_idr_rate=prediction_result.get("usd_to_idr_rate", 16000),
-
-        input_status=prediction_result.get("input_status", "unknown"),
-        prediction_reliability=prediction_result.get("prediction_reliability", "unknown"),
-
+        predicted_revenue_usd=float(prediction_result.get("predicted_revenue_usd", 0) or 0),
+        predicted_revenue_idr=float(prediction_result.get("predicted_revenue_idr", 0) or 0),
+        currency=str(prediction_result.get("currency", "USD")),
+        converted_currency=str(prediction_result.get("converted_currency", "IDR")),
+        usd_to_idr_rate=float(prediction_result.get("usd_to_idr_rate", 16000) or 16000),
+        input_status=str(prediction_result.get("input_status", "unknown")),
+        prediction_reliability=str(prediction_result.get("prediction_reliability", "unknown")),
         validation_warnings=prediction_result.get("validation_warnings", []),
         out_of_range_features=prediction_result.get("out_of_range_features", []),
         unknown_categories=prediction_result.get("unknown_categories", []),
-
         model_name=prediction_result.get("model_name"),
         model_version=prediction_result.get("model_version"),
         model_alias=prediction_result.get("model_alias"),
@@ -35,7 +30,6 @@ def create_prediction_history(
     db.add(history)
     db.commit()
     db.refresh(history)
-
     return history
 
 
