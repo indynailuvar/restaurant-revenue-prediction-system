@@ -19,7 +19,7 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 # ── Load data ──
 X_train, X_test, y_train, y_test, scaler, feature_names = load_and_preprocess()
 
-# ── Set experiment — SAMA dengan train_regression.py ──
+# ── Set experiment — 
 mlflow.set_experiment("restaurant_revenue_prediction")
 
 # ── Helper: train dan evaluasi ──
@@ -164,13 +164,13 @@ for scenario in model_scenarios:
 
 
 # ── Pilih model terbaik (MAE terkecil) ──
-summary_df = pd.DataFrame(summary_results).sort_values(by="MAE").reset_index(drop=True)
-winner     = summary_results[summary_df.index[0]]
+summary_df = pd.DataFrame(summary_results)[["Model", "MAE", "RMSE", "R2"]].sort_values(by="MAE").reset_index(drop=True)
+winner     = min(summary_results, key=lambda x: x["MAE"])  
 
 print("\n" + "="*60)
 print("HASIL AKHIR PERBANDINGAN")
 print("="*60)
-print(summary_df[["Model", "MAE", "RMSE", "R2"]].to_string(index=False))
+print(summary_df.to_string(index=False))
 
 print(f"\n CHAMPION: {winner['Model']}")
 print(f"   MAE  : {winner['MAE']:,.2f}")
