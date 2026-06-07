@@ -21,6 +21,8 @@ function PredictionPage() {
     fetchPrediction(data)
   }, [])
 
+  import { predictRevenue } from '../services/api'
+  
   const fetchPrediction = async (data) => {
     try {
       setLoading(true)
