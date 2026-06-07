@@ -1,16 +1,34 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
 
+from app.database import get_db
+from app.repositories.prediction_history_repository import create_prediction_history
 from app.schemas.request import RevenuePredictionRequest
 from app.schemas.response import RevenuePredictionResponse
 from app.services.predict_service import predict_revenue
+
 
 router = APIRouter()
 
 
 @router.post("/predict", response_model=RevenuePredictionResponse)
-def predict(request: RevenuePredictionRequest):
+def predict(
+    request: RevenuePredictionRequest,
+    db: Session = Depends(get_db),
+):
     try:
+        input_payload = request.model_dump()
+
         result = predict_revenue(request)
+
+        history = create_prediction_history(
+            db=db,
+            input_payload=input_payload,
+            prediction_result=result,
+        )
+
+        result["prediction_history_id"] = history.id
+
         return result
 
     except FileNotFoundError as error:
