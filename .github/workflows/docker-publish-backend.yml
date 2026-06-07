@@ -27,11 +27,9 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and push backend image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v4
         with:
-          context: .
-          file: backend/Dockerfile
+          context: ./backend
+          file: ./backend/Dockerfile
           push: true
-          tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/restaurant-revenue-backend:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/restaurant-revenue-backend:${{ github.sha }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/restaurant-revenue-backend:latest
