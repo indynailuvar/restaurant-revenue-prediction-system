@@ -21,8 +21,6 @@ function PredictionPage() {
     fetchPrediction(data)
   }, [])
 
-  import { predictRevenue } from '../services/api'
-  
   const fetchPrediction = async (data) => {
     try {
       setLoading(true)
@@ -54,6 +52,7 @@ function PredictionPage() {
         is_prediction_adjusted: false,
         currency_note: 'Prediksi Revenue utama ditampilkan dalam USD sesuai satuan target pada dataset training.',
         exchange_rate_note: 'Konversi IDR menggunakan rate konfigurasi sistem, bukan kurs real-time.',
+        prediction_history_id: null,
       })
     } finally {
       setLoading(false)
@@ -418,6 +417,56 @@ function PredictionPage() {
             </div>
           </div>
         )}
+
+        {/* ===== HISTORY ID BADGE ===== */}
+        {result?.prediction_history_id != null && (
+          <div style={{
+            background: '#1E1208',
+            borderRadius: '16px',
+            padding: '24px 28px',
+            marginBottom: '20px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            boxShadow: '0 20px 60px rgba(30,18,8,0.20)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}>
+            {/* Decorative glow */}
+            <div style={{
+              position: 'absolute', left: '-40px', bottom: '-40px',
+              width: '160px', height: '160px', borderRadius: '50%',
+              background: 'radial-gradient(circle, rgba(228,168,72,0.15) 0%, transparent 70%)',
+              pointerEvents: 'none'
+            }} />
+            <div style={{ position: 'relative', zIndex: 1 }}>
+              <div style={{
+                fontSize: '0.68rem', fontWeight: 700, letterSpacing: '0.12em',
+                textTransform: 'uppercase', color: '#7A6050', marginBottom: '6px'
+              }}>
+                History ID · Tersimpan di Database
+              </div>
+              <div style={{
+                fontFamily: 'DM Mono, monospace',
+                fontSize: '1.1rem', fontWeight: 700,
+                color: '#E4A848', letterSpacing: '0.04em'
+              }}>
+                #{result.prediction_history_id}
+              </div>
+            </div>
+            <div style={{
+              background: 'rgba(139,175,138,0.15)',
+              border: '1px solid rgba(139,175,138,0.30)',
+              borderRadius: '8px', padding: '6px 14px',
+              fontSize: '0.78rem', fontWeight: 600,
+              color: '#8BAF8A', position: 'relative', zIndex: 1,
+              flexShrink: 0
+            }}>
+              ✅ Tersimpan
+            </div>
+          </div>
+        )}
+        {/* ===== END HISTORY ID BADGE ===== */}
 
         {/* Out of Range Warning */}
         {result?.out_of_range_features?.length > 0 && (
