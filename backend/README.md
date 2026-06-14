@@ -506,7 +506,7 @@ Kesimpulan status: sistem inti sudah berjalan dari input user, prediksi model, o
 
 ## Documentation
 
-Dokumentasi detail project tersedia pada folder `docs`.
+Dokumentasi detail project tersedia pada folder `docs`
 
 Dokumen utama:
 
